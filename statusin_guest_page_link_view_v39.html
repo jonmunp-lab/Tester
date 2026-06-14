@@ -92,7 +92,7 @@
           <p id="journey-complaint" class="text-[13px] text-slate-400 font-medium mb-2"></p>
 
           <!-- Status title — THE most important thing -->
-          <h1 id="hero-status-title" class="text-[27px] font-extrabold text-[#16465B] tracking-tight leading-[1.15] mb-4"></h1>
+          <h1 id="hero-status-title" class="text-[27px] font-extrabold text-slate-950 tracking-tight leading-[1.15] mb-4"></h1>
 
           <!-- Badge: responsibility + freshness — 1 line -->
           <div class="flex items-center gap-2.5 flex-wrap mb-5">
@@ -104,16 +104,16 @@
           </div>
 
           <!-- Status description — what's happening -->
-          <p id="status-description" class="text-[14px] text-slate-600 leading-relaxed mb-5"></p>
+          <p id="status-description" class="text-[14px] text-slate-500 leading-relaxed mb-5"></p>
 
-          <!-- Next update — flat row, no card -->
-          <div id="next-update-row" class="flex gap-3 items-start py-3 border-t border-slate-100">
-            <div class="mt-0.5 w-7 h-7 rounded-full bg-[#16465B]/[0.06] text-[#16465B] flex items-center justify-center shrink-0">
+          <!-- Next update — subtle highlighted row for reassurance -->
+          <div id="next-update-row" class="flex gap-3 items-start p-3.5 rounded-2xl bg-slate-50/80">
+            <div class="mt-0.5 w-7 h-7 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center shrink-0">
               <iconify-icon icon="solar:clock-circle-bold" class="text-[14px]"></iconify-icon>
             </div>
             <div class="min-w-0 flex-1">
-              <p id="next-update-label" class="text-[13px] font-bold text-slate-800 leading-snug"></p>
-              <p id="next-expectation-note" class="text-[12px] text-slate-400 leading-[18px] mt-0.5"></p>
+              <p id="next-update-label" class="text-[13px] font-bold text-slate-900 leading-snug"></p>
+              <p id="next-expectation-note" class="text-[12px] text-slate-500 leading-[18px] mt-0.5"></p>
             </div>
           </div>
         </section>
@@ -199,8 +199,8 @@
         const li = document.createElement('li'); li.className = `relative flex gap-4 ${isLast ? '' : 'pb-7'}`;
         if (step.status === 'current') li.setAttribute('aria-current', 'step');
         const left = document.createElement('div'); left.className = 'relative w-6 shrink-0 flex justify-center'; left.setAttribute('aria-hidden', 'true');
-        if (step.status === 'done') left.innerHTML = `<iconify-icon icon="solar:check-circle-bold" class="relative z-10 text-[21px] text-[#16465B]/40"></iconify-icon>${!isLast ? '<div class="absolute top-[21px] -bottom-7 w-px bg-slate-200"></div>' : ''}`;
-        else if (step.status === 'current') left.innerHTML = `<div class="relative z-10 w-[20px] h-[20px] shrink-0 mt-0.5 rounded-full bg-[#16465B] border-[3px] border-white shadow-[0_0_0_4px_rgba(22,70,91,0.12)]"></div>${!isLast ? '<div class="absolute top-[24px] -bottom-7 w-px bg-slate-200"></div>' : ''}`;
+        if (step.status === 'done') left.innerHTML = `<iconify-icon icon="solar:check-circle-bold" class="relative z-10 text-[21px] text-slate-300"></iconify-icon>${!isLast ? '<div class="absolute top-[21px] -bottom-7 w-px bg-slate-200"></div>' : ''}`;
+        else if (step.status === 'current') left.innerHTML = `<div class="relative z-10 w-[20px] h-[20px] shrink-0 mt-0.5 rounded-full bg-blue-500 border-[3px] border-white shadow-[0_0_0_4px_rgba(59,130,246,0.12)]"></div>${!isLast ? '<div class="absolute top-[24px] -bottom-7 w-px bg-slate-200"></div>' : ''}`;
         else left.innerHTML = `<div class="relative z-10 w-[20px] h-[20px] shrink-0 mt-0.5 rounded-full border-2 border-slate-200 bg-white"></div>${!isLast ? '<div class="absolute top-[24px] -bottom-7 w-px bg-slate-200"></div>' : ''}`;
         li.appendChild(left);
         const right = document.createElement('div'); right.className = 'min-w-0 flex-1';
