@@ -607,7 +607,7 @@
           `;
         } else {
           rightCol.innerHTML = `
-            <p class="text-[14px] font-medium text-slate-500 opacity-70">${escapeHtml(step.label)}</p>
+            <p class="text-[14px] font-medium text-slate-400">${escapeHtml(step.label)}</p>
           `;
         }
 
@@ -822,9 +822,18 @@
     async function handleShare() {
       const { business, journey, service, steps } = PAGE_DATA;
       const currentStep = steps && steps[service.currentStepIndex];
+      const stepLabel = currentStep ? currentStep.label : '';
+
+      const shareText = [
+        `${journey.title || ''} — ${business.name || ''}`,
+        `📍 ${stepLabel}`,
+        '',
+        'Pantau progress layanan di sini:'
+      ].join('\n');
+
       const shareData = {
         title: `${journey.title || ''} — ${business.name || ''}`,
-        text: `${currentStep ? currentStep.label : ''} · Case #${journey.case_number || ''}`,
+        text: shareText,
         url: journey.guest_url,
       };
 
