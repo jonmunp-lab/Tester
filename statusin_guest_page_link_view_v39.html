@@ -232,7 +232,7 @@
     }
 
     function renderEvidenceCard(ev) {
-      const card = document.createElement('div'); card.className = 'mt-3 bg-white border border-slate-100 rounded-2xl p-3 shadow-sm';
+      const card = document.createElement('div'); card.className = 'mt-3 bg-white/88 backdrop-blur-xl border border-white rounded-[18px] p-3 shadow-[0_10px_28px_rgba(15,23,42,0.06)] ring-1 ring-slate-950/[0.035]';
       card.innerHTML = `<div class="flex items-center justify-between gap-2 mb-2"><p class="text-[12px] font-semibold text-slate-950">${escapeHtml(ev.title)}</p><span class="text-[11px] font-medium text-slate-400">${escapeHtml(ev.capturedAtLabel)}</span></div>`;
       if (ev.description) { const d = document.createElement('p'); d.className = 'text-[13px] text-slate-500 leading-[19px]'; d.textContent = ev.description; card.appendChild(d); }
       if (ev.photos?.length) {
