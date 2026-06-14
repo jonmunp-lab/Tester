@@ -99,18 +99,40 @@
           </div>
         </section>
 
-        <!-- ═══ CERTAINTY SUMMARY ═══ 1 subtle container — the "anchor" -->
-        <section id="certainty-summary" class="mb-7 bg-white border border-slate-100 rounded-2xl p-5 shadow-sm" aria-label="Ringkasan status">
-          <p id="status-description" class="text-[14px] text-slate-600 leading-relaxed"></p>
-
-          <!-- Next update row inside the same container -->
-          <div id="next-update-row" class="flex gap-3 items-start mt-4 pt-4 border-t border-slate-100">
-            <div class="mt-0.5 w-7 h-7 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center shrink-0">
-              <iconify-icon icon="solar:clock-circle-bold" class="text-[14px]"></iconify-icon>
+        <!-- ═══ CERTAINTY SUMMARY ═══ v38-style panel with proper depth -->
+        <section class="mb-7 bg-white/86 backdrop-blur-2xl border border-white rounded-[1.75rem] p-5 shadow-[0_18px_54px_rgba(15,23,42,0.08)] ring-1 ring-slate-950/[0.045]" aria-label="Ringkasan status">
+          <div class="flex items-start gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 ring-1 ring-blue-100 shrink-0" aria-hidden="true">
+              <iconify-icon icon="solar:shield-check-bold-duotone" class="text-xl"></iconify-icon>
             </div>
-            <div class="min-w-0 flex-1">
-              <p id="next-update-label" class="text-[13px] font-bold text-slate-900 leading-snug"></p>
-              <p id="next-expectation-note" class="text-[12px] text-slate-500 leading-[18px] mt-0.5"></p>
+            <div>
+              <p class="text-[10px] text-[#16465B] font-extrabold uppercase tracking-wider mb-0.5">Status Saat Ini</p>
+              <p id="status-headline" class="text-slate-950 font-bold text-base leading-tight"></p>
+              <p id="status-description" class="text-[13px] text-slate-500 leading-[19px] mt-1"></p>
+            </div>
+          </div>
+
+          <div class="bg-[#F8FAFC]/82 backdrop-blur-xl rounded-2xl p-4 border border-slate-950/[0.04] space-y-3 shadow-inner">
+            <div class="flex justify-between items-center">
+              <span id="responsibility-label" class="text-slate-500 text-xs font-semibold"></span>
+              <span id="responsibility-badge" class="text-xs font-bold px-2.5 py-1 bg-[#16465B]/8 text-[#16465B] rounded-lg"></span>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500 text-xs font-semibold">Update Terakhir</span>
+              <span id="freshness-line" class="text-slate-950 text-xs font-bold"></span>
+            </div>
+
+            <div class="h-px bg-slate-200/80 w-full my-2"></div>
+
+            <div id="next-update-row" class="flex gap-3 items-start">
+              <div class="mt-0.5 w-6 h-6 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center shrink-0" aria-hidden="true">
+                <iconify-icon icon="solar:clock-circle-bold" class="text-sm"></iconify-icon>
+              </div>
+              <div>
+                <p id="next-update-label" class="text-[14px] font-bold text-slate-900 leading-[20px]"></p>
+                <p id="next-expectation-note" class="text-[13px] text-slate-500 leading-[19px] mt-1"></p>
+              </div>
             </div>
           </div>
         </section>
@@ -156,7 +178,7 @@
   <script>
     const PAGE_DATA = {
       business: { name: "iRepair Jakarta", avatar_url: "https://i.pravatar.cc/150?u=irepair-jakarta", whatsapp_number: "+6285143550781" },
-      journey: { case_number: "SRV-681657", title: "Service iPhone 11", complaint: "Service iPhone 11 · Mati total, layar retak", status_description: "Teknisi sedang mengecek komponen utama perangkat Anda. Hasil pemeriksaan akan digunakan untuk menentukan langkah berikutnya.", responsibility_label: "Ditangani oleh", responsibility_badge: "Teknisi", freshness_line: "Baru saja", next_update_at: "2026-06-05T17:00:00+07:00", next_expectation_note: "Estimasi biaya akan muncul setelah pengecekan selesai.", guest_url: window.location.href },
+      journey: { case_number: "SRV-681657", title: "Service iPhone 11", complaint: "Service iPhone 11 · Mati total, layar retak", status_headline: "Sedang diperiksa teknisi", status_description: "Teknisi sedang mengecek komponen utama perangkat Anda. Hasil pemeriksaan akan digunakan untuk menentukan langkah berikutnya.", responsibility_label: "Ditangani oleh", responsibility_badge: "Teknisi", freshness_line: "Baru saja", next_update_at: "2026-06-05T17:00:00+07:00", next_expectation_note: "Estimasi biaya akan muncul setelah pengecekan selesai.", guest_url: window.location.href },
       service: { id: "case-681657", title: "Service iPhone 11", currentStepIndex: 1, currentStepKey: "initial_check" },
       steps: [
         { key: "service_received", label: "Layanan Diterima", status: "done", completedAtLabel: "Hari ini, 09.12" },
@@ -245,7 +267,13 @@
       const cEl = document.getElementById('journey-complaint'); if (journey.complaint) { cEl.textContent = journey.complaint; cEl.style.display = ''; } else cEl.style.display = 'none';
       document.getElementById('hero-badge-text').textContent = `${journey.responsibility_label||''} ${journey.responsibility_badge||''}`.trim();
       document.getElementById('hero-freshness').textContent = journey.freshness_line || '';
+      // Certainty panel
+      document.getElementById('status-headline').textContent = journey.status_headline || journey.status_description || '';
       document.getElementById('status-description').textContent = journey.status_description || '';
+      document.getElementById('responsibility-label').textContent = journey.responsibility_label || '';
+      document.getElementById('responsibility-badge').textContent = journey.responsibility_badge || '';
+      document.getElementById('freshness-line').textContent = journey.freshness_line || '—';
+      // Next update
       const nxt = formatNextUpdate(journey.next_update_at); const nxtRow = document.getElementById('next-update-row');
       if (nxt || journey.next_expectation_note) { nxtRow.style.display = ''; document.getElementById('next-update-label').textContent = nxt || ''; document.getElementById('next-expectation-note').textContent = journey.next_expectation_note || ''; } else nxtRow.style.display = 'none';
       renderStatusRail(); renderWhatsAppCta(business);
