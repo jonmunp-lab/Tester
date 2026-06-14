@@ -275,8 +275,8 @@
         <!-- Certainty Panel -->
         <section class="bg-white/86 backdrop-blur-2xl border border-white rounded-[1.75rem] p-5 shadow-[0_18px_54px_rgba(15,23,42,0.08)] ring-1 ring-slate-950/[0.045]" aria-label="Ringkasan kepastian layanan">
           <div class="flex items-start gap-3 mb-4">
-            <div class="w-10 h-10 rounded-full bg-[#16465B]/8 flex items-center justify-center text-[#16465B] ring-1 ring-[#16465B]/10 shrink-0" aria-hidden="true">
-              <iconify-icon icon="solar:settings-bold-duotone" class="text-xl"></iconify-icon>
+            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 ring-1 ring-blue-100 shrink-0" aria-hidden="true">
+              <iconify-icon icon="solar:shield-check-bold-duotone" class="text-xl"></iconify-icon>
             </div>
             <div>
               <p class="text-[10px] text-[#16465B] font-extrabold uppercase tracking-wider mb-0.5">
@@ -324,13 +324,21 @@
         </section>
 
         <!-- Footer -->
-        <footer class="pt-10 pb-8 text-center">
-          <p class="text-xs font-semibold text-slate-500 mb-0.5 tracking-wide">
-            Statusin
-          </p>
-          <p class="text-xs text-slate-500 opacity-80">
-            Kepastian untuk setiap layanan
-          </p>
+        <footer class="pt-10 pb-8 text-center space-y-4">
+          <!-- CTA: WhatsApp contact -->
+          <a id="cta-whatsapp" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-slate-200 bg-white/80 backdrop-blur-xl shadow-[0_4px_16px_rgba(15,23,42,0.06)] hover:shadow-[0_8px_24px_rgba(15,23,42,0.10)] hover:border-slate-300 active:scale-[0.97] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16465B]/25">
+            <iconify-icon icon="solar:chat-round-dots-linear" class="text-lg text-[#16465B]"></iconify-icon>
+            <span id="cta-whatsapp-text" class="text-[13px] font-semibold text-slate-700"></span>
+          </a>
+
+          <div>
+            <p class="text-xs font-semibold text-slate-400 mb-0.5 tracking-wide">
+              Statusin
+            </p>
+            <p class="text-xs text-slate-400 opacity-80">
+              Kepastian untuk setiap layanan
+            </p>
+          </div>
         </footer>
 
       </div>
@@ -380,6 +388,7 @@
       business: {
         name: "iRepair Jakarta",
         avatar_url: "https://i.pravatar.cc/150?u=irepair-jakarta",
+        whatsapp_number: "+6281211112222",
       },
       journey: {
         case_number: "SRV-681657",
@@ -473,10 +482,17 @@
     let refreshTimer = null;
 
     function performSilentRefresh() {
-      // In production: fetch fresh PAGE_DATA from API, then re-render without reload.
-      // Production: fetchFreshData().then(data => { Object.assign(PAGE_DATA, data); renderPage(); });
+      // Production: fetch fresh data from API, then re-render without page reload.
+      // Example:
+      //   const res = await fetch(`/api/guest/${token}`);
+      //   const freshData = await res.json();
+      //   Object.assign(PAGE_DATA.journey, freshData.journey);
+      //   PAGE_DATA.steps = freshData.steps;
+      //   PAGE_DATA.evidencePhotos = freshData.evidencePhotos;
+      //   renderPage();
+      //
+      // For template/demo: no-op (uncomment above when API is ready)
       lastLoadedAt = new Date();
-      window.location.reload();
     }
 
     function startAutoRefresh() {
@@ -728,6 +744,23 @@
       wrapper.appendChild(fallback);
     }
 
+    // ─── RENDER WHATSAPP CTA ─────────────────────────────────────────────────
+    function renderWhatsAppCta(business) {
+      const ctaLink = document.getElementById('cta-whatsapp');
+      const ctaText = document.getElementById('cta-whatsapp-text');
+      if (!ctaLink || !ctaText) return;
+
+      if (business.whatsapp_number) {
+        const cleanNumber = business.whatsapp_number.replace(/[^0-9]/g, '');
+        ctaLink.href = `https://wa.me/${cleanNumber}`;
+        ctaText.textContent = `Tanya ${business.name || 'Admin'} via WhatsApp`;
+        ctaLink.style.display = '';
+      } else {
+        // Hide CTA if no WhatsApp number
+        ctaLink.style.display = 'none';
+      }
+    }
+
     // ─── RENDER PAGE ─────────────────────────────────────────────────────────
     function renderPage() {
       const { business, journey, service, steps } = PAGE_DATA;
@@ -775,6 +808,9 @@
       // Render data-driven status rail
       renderStatusRail();
 
+      // WhatsApp CTA
+      renderWhatsAppCta(business);
+
       // Share button
       document.getElementById('btn-share').addEventListener('click', handleShare);
 
@@ -808,7 +844,22 @@
         const btn = document.getElementById('btn-share');
         const icon = btn.querySelector('iconify-icon');
         icon.setAttribute('icon', 'solar:check-circle-linear');
-        setTimeout(() => icon.setAttribute('icon', 'solar:share-linear'), 2000);
+
+        // Show "Link disalin" tooltip
+        const tooltip = document.createElement('div');
+        tooltip.className = 'absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-semibold text-white bg-slate-800 rounded-lg px-3 py-1.5 shadow-lg pointer-events-none';
+        tooltip.textContent = 'Link disalin';
+        tooltip.style.opacity = '0';
+        tooltip.style.transition = 'opacity 0.18s ease-out';
+        btn.style.position = 'relative';
+        btn.appendChild(tooltip);
+        requestAnimationFrame(() => { tooltip.style.opacity = '1'; });
+
+        setTimeout(() => {
+          icon.setAttribute('icon', 'solar:share-linear');
+          tooltip.style.opacity = '0';
+          setTimeout(() => tooltip.remove(), 200);
+        }, 2000);
       }).catch(() => {
         // Clipboard API not available — do nothing gracefully
       });
