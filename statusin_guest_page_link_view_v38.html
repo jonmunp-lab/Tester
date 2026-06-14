@@ -752,7 +752,15 @@
 
       if (business.whatsapp_number) {
         const cleanNumber = business.whatsapp_number.replace(/[^0-9]/g, '');
-        ctaLink.href = `https://wa.me/${cleanNumber}`;
+        const { journey } = PAGE_DATA;
+        const message = [
+          'Halo, saya ingin menanyakan progress layanan saya.',
+          '',
+          journey.title || '',
+          journey.case_number ? `Case #${journey.case_number}` : '',
+        ].filter(Boolean).join('\n');
+
+        ctaLink.href = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
         ctaText.textContent = 'Tanya Admin via WhatsApp';
         ctaLink.style.display = '';
       } else {
