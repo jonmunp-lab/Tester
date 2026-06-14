@@ -132,7 +132,7 @@
       }
 
       #lightbox-dots {
-        bottom: 68px;
+        bottom: 48px;
       }
     }
 
@@ -323,17 +323,6 @@
           </ol>
         </section>
 
-        <!-- Refresh Bar -->
-        <section id="refresh-bar" class="flex items-center justify-between gap-3 bg-slate-50/80 backdrop-blur-xl rounded-2xl px-4 py-3 border border-slate-950/[0.04]" aria-label="Informasi pembaruan halaman">
-          <div class="flex items-center gap-2 min-w-0">
-            <iconify-icon icon="solar:refresh-circle-linear" class="text-base text-slate-400 shrink-0"></iconify-icon>
-            <p id="last-loaded-label" class="text-[12px] text-slate-500 truncate"></p>
-          </div>
-          <button id="btn-refresh" type="button" class="text-[12px] font-bold text-[#16465B] whitespace-nowrap px-3 py-1.5 rounded-lg bg-[#16465B]/8 hover:bg-[#16465B]/12 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16465B]/25" aria-label="Muat ulang status">
-            Muat ulang
-          </button>
-        </section>
-
         <!-- Footer -->
         <footer class="pt-10 pb-8 text-center">
           <p class="text-xs font-semibold text-slate-500 mb-0.5 tracking-wide">
@@ -371,10 +360,10 @@
     <!-- Shared element transition layer -->
     <img id="lightbox-fly" src="" alt="" draggable="false" aria-hidden="true">
 
-    <!-- Dot indicators -->
-    <div id="lightbox-dots" class="lightbox-ui absolute bottom-40 left-1/2 -translate-x-1/2 flex gap-1.5 z-20" aria-hidden="true"></div>
+    <!-- Dot indicators — adjusted closer to photo card -->
+    <div id="lightbox-dots" class="lightbox-ui absolute bottom-28 left-1/2 -translate-x-1/2 flex gap-1.5 z-20" aria-hidden="true"></div>
 
-    <div id="lightbox-caption" class="lightbox-ui absolute bottom-14 left-1/2 -translate-x-1/2 text-center px-6 w-full max-w-[560px] z-20">
+    <div id="lightbox-caption" class="lightbox-ui absolute bottom-8 left-1/2 -translate-x-1/2 text-center px-6 w-full max-w-[560px] z-20">
       <p class="text-[13px] font-semibold text-white">Catatan teknisi</p>
       <p id="lightbox-caption-text" class="text-xs text-white/70 mt-1 leading-relaxed"></p>
       <p id="lightbox-helper-text" class="text-[11px] text-white/50 mt-2">
@@ -477,26 +466,16 @@
       ],
     };
 
-    // ─── AUTO-REFRESH ────────────────────────────────────────────────────────
+    // ─── AUTO-REFRESH (SILENT) ───────────────────────────────────────────────
+    // Background-only refresh. No visible UI — customer doesn't need to know.
     const REFRESH_INTERVAL_MS = 90000; // 90 seconds
     let lastLoadedAt = new Date();
     let refreshTimer = null;
 
-    function formatLastLoaded(date) {
-      return `Dimuat ${date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta' })}`;
-    }
-
-    function updateLastLoadedLabel() {
-      const el = document.getElementById('last-loaded-label');
-      if (el) el.textContent = formatLastLoaded(lastLoadedAt);
-    }
-
-    function performRefresh() {
-      // In production: fetch fresh PAGE_DATA from API, then re-render.
-      // For now: simulate refresh by reloading the page.
-      lastLoadedAt = new Date();
-      updateLastLoadedLabel();
+    function performSilentRefresh() {
+      // In production: fetch fresh PAGE_DATA from API, then re-render without reload.
       // Production: fetchFreshData().then(data => { Object.assign(PAGE_DATA, data); renderPage(); });
+      lastLoadedAt = new Date();
       window.location.reload();
     }
 
@@ -504,7 +483,7 @@
       stopAutoRefresh();
       refreshTimer = setInterval(() => {
         if (!document.hidden) {
-          performRefresh();
+          performSilentRefresh();
         }
       }, REFRESH_INTERVAL_MS);
     }
@@ -516,13 +495,12 @@
       }
     }
 
-    // Refresh when tab becomes visible again
+    // Refresh when tab becomes visible again (if stale > 60s)
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
-        // If page has been hidden for > 60s, refresh
         const elapsed = Date.now() - lastLoadedAt.getTime();
         if (elapsed > 60000) {
-          performRefresh();
+          performSilentRefresh();
         }
         startAutoRefresh();
       } else {
@@ -797,14 +775,10 @@
       // Render data-driven status rail
       renderStatusRail();
 
-      // Refresh bar
-      updateLastLoadedLabel();
-      document.getElementById('btn-refresh').addEventListener('click', performRefresh);
-
       // Share button
       document.getElementById('btn-share').addEventListener('click', handleShare);
 
-      // Start auto-refresh
+      // Start silent auto-refresh
       startAutoRefresh();
     }
 
@@ -1491,8 +1465,11 @@
         pinchBasePanY = panY;
         pinchPanStarted = false;
 
-        // Set transform origin once at start
-        setTransformOriginFromPoint(midpoint.x, midpoint.y);
+        // FIX #2: Only set transform-origin on FIRST zoom (scale === 1).
+        // If already zoomed, keep existing origin to prevent jump.
+        if (scale <= 1.06) {
+          setTransformOriginFromPoint(midpoint.x, midpoint.y);
+        }
 
         // IMPORTANT: disable CSS transition during active pinch for smooth 60fps
         const card = getCurrentCard();
@@ -1624,9 +1601,22 @@
           card.style.transition = '';
         }
 
-        // Snap back to scale 1 if close enough, with smooth animation
+        // FIX #1: Smooth zoom-out — animate scale AND pan back proportionally.
+        // Instead of snapping pan to 0, use a transition that brings both to rest.
         if (scale <= 1.06) {
-          resetZoom(true);
+          // Animate to scale 1 with pan proportionally easing to 0
+          scale = 1;
+          panX = 0;
+          panY = 0;
+          const cardEl = getCurrentCard();
+          if (cardEl) {
+            // Use a slightly longer, softer ease for zoom-out to feel natural
+            cardEl.style.transition = 'transform 0.32s cubic-bezier(0.22, 1, 0.36, 1)';
+            cardEl.style.transformOrigin = 'center center';
+            cardEl.style.transform = 'translate3d(0px, 0px, 0) scale(1)';
+            // Clear inline transition after animation completes
+            setTimeout(() => { cardEl.style.transition = ''; }, 340);
+          }
         } else if (scale > 5) {
           // Cap at max
           scale = 5;
