@@ -31,6 +31,22 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
+    /* ─── Reduced Motion ──────────────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+
+      #lightbox-fly,
+      .lightbox-card,
+      #lightbox-track {
+        transition: none !important;
+      }
+    }
   </style>
 
   <style>
@@ -84,6 +100,42 @@
       will-change: transform;
     }
 
+    /* Landscape: make card fit the shorter viewport height */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .lightbox-card {
+        width: min(60vw, 480px);
+        aspect-ratio: 16 / 9;
+      }
+
+      #lightbox-caption {
+        bottom: 6px;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      #lightbox-caption p.text-\\[13px\\] {
+        font-size: 11px;
+      }
+
+      #lightbox-caption #lightbox-caption-text {
+        font-size: 10px;
+        max-height: 2.4em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+
+      #lightbox-caption #lightbox-helper-text {
+        display: none;
+      }
+
+      #lightbox-dots {
+        bottom: 68px;
+      }
+    }
+
     .lightbox-card.no-anim {
       transition: none;
     }
@@ -112,6 +164,13 @@
 
     .lightbox-full.is-loaded {
       opacity: 1;
+    }
+
+    /* Image load error state */
+    .lightbox-full.is-error {
+      opacity: 1;
+      object-fit: none;
+      background: rgba(255,255,255,0.04);
     }
 
     .lightbox-shimmer {
@@ -154,6 +213,21 @@
         border-radius 0.32s cubic-bezier(0.22, 1, 0.36, 1),
         opacity 0.20s ease-out;
     }
+
+    /* Avatar fallback initial */
+    .avatar-fallback {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      border-radius: 9999px;
+      background: #16465B;
+      color: white;
+      font-weight: 700;
+      font-size: 1.125rem;
+      text-transform: uppercase;
+    }
   </style>
 
 </head>
@@ -173,9 +247,9 @@
 
       <!-- Header Profile: sticky web header -->
       <div class="sticky top-0 z-50 -mx-4 sm:-mx-6 px-5 sm:px-6 py-4 flex items-center justify-between bg-white/78 backdrop-blur-2xl border-b border-slate-950/[0.04] shadow-[0_10px_34px_rgba(15,23,42,0.045)]">
-        <button class="flex items-center gap-3 text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16465B]/25 rounded-2xl transition-all">
-          <div class="w-12 h-12 rounded-full bg-white p-[2px] group-active:scale-95 transition-transform duration-200 shadow-[0_12px_30px_rgba(15,23,42,0.12)] ring-1 ring-slate-950/[0.06]">
-            <img id="business-avatar" src="" alt="Profile" class="w-full h-full rounded-full object-cover">
+        <button class="flex items-center gap-3 text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16465B]/25 rounded-2xl transition-all" aria-label="Profil bisnis">
+          <div id="avatar-wrapper" class="w-12 h-12 rounded-full bg-white p-[2px] group-active:scale-95 transition-transform duration-200 shadow-[0_12px_30px_rgba(15,23,42,0.12)] ring-1 ring-slate-950/[0.06]">
+            <!-- Avatar or fallback injected by JS -->
           </div>
           <div>
             <h2 id="business-name" class="text-base font-bold tracking-tight transition-colors text-slate-950 group-hover:text-slate-700"></h2>
@@ -192,16 +266,16 @@
       <div class="relative z-20 px-1 sm:px-0 space-y-5 pt-5 pb-10">
 
         <!-- Case Title -->
-        <section>
+        <section aria-labelledby="journey-title">
           <p id="current-label" class="text-[11px] font-bold tracking-[0.16em] uppercase text-[#16465B] mb-2"></p>
           <h1 id="journey-title" class="text-2xl font-extrabold text-slate-950 tracking-tight leading-tight"></h1>
           <p id="journey-complaint" class="text-[14px] text-slate-500 font-medium leading-snug mt-1"></p>
         </section>
 
         <!-- Certainty Panel -->
-        <section class="bg-white/86 backdrop-blur-2xl border border-white rounded-[1.75rem] p-5 shadow-[0_18px_54px_rgba(15,23,42,0.08)] ring-1 ring-slate-950/[0.045]">
+        <section class="bg-white/86 backdrop-blur-2xl border border-white rounded-[1.75rem] p-5 shadow-[0_18px_54px_rgba(15,23,42,0.08)] ring-1 ring-slate-950/[0.045]" aria-label="Ringkasan kepastian layanan">
           <div class="flex items-start gap-3 mb-4">
-            <div class="w-10 h-10 rounded-full bg-[#16465B]/8 flex items-center justify-center text-[#16465B] ring-1 ring-[#16465B]/10 shrink-0">
+            <div class="w-10 h-10 rounded-full bg-[#16465B]/8 flex items-center justify-center text-[#16465B] ring-1 ring-[#16465B]/10 shrink-0" aria-hidden="true">
               <iconify-icon icon="solar:settings-bold-duotone" class="text-xl"></iconify-icon>
             </div>
             <div>
@@ -227,8 +301,8 @@
             <div class="h-px bg-slate-200/80 w-full my-2"></div>
 
             <!-- Integrated next expectation -->
-            <div class="flex gap-3 items-start">
-              <div class="mt-0.5 w-6 h-6 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center shrink-0">
+            <div id="next-update-row" class="flex gap-3 items-start">
+              <div class="mt-0.5 w-6 h-6 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center shrink-0" aria-hidden="true">
                 <iconify-icon icon="solar:clock-circle-bold" class="text-sm"></iconify-icon>
               </div>
               <div>
@@ -239,14 +313,25 @@
           </div>
         </section>
 
-        <!-- Status Rail (rendered by JS) -->
-        <section>
+        <!-- Status Rail (rendered by JS as ordered list) -->
+        <section aria-label="Progress layanan">
           <h3 class="text-[13px] font-semibold text-[#16465B] mb-5">
             Progress layanan
           </h3>
-          <div id="status-rail" class="relative">
+          <ol id="status-rail" class="relative list-none p-0 m-0" role="list">
             <!-- Nodes injected by renderStatusRail() -->
+          </ol>
+        </section>
+
+        <!-- Refresh Bar -->
+        <section id="refresh-bar" class="flex items-center justify-between gap-3 bg-slate-50/80 backdrop-blur-xl rounded-2xl px-4 py-3 border border-slate-950/[0.04]" aria-label="Informasi pembaruan halaman">
+          <div class="flex items-center gap-2 min-w-0">
+            <iconify-icon icon="solar:refresh-circle-linear" class="text-base text-slate-400 shrink-0"></iconify-icon>
+            <p id="last-loaded-label" class="text-[12px] text-slate-500 truncate"></p>
           </div>
+          <button id="btn-refresh" type="button" class="text-[12px] font-bold text-[#16465B] whitespace-nowrap px-3 py-1.5 rounded-lg bg-[#16465B]/8 hover:bg-[#16465B]/12 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16465B]/25" aria-label="Muat ulang status">
+            Muat ulang
+          </button>
         </section>
 
         <!-- Footer -->
@@ -264,16 +349,16 @@
   </main>
 
   <!-- Image Lightbox -->
-  <div id="lightbox" class="fixed inset-0 z-[100] opacity-0 pointer-events-none transition-opacity duration-300 bg-slate-950/60 backdrop-blur-xl overflow-hidden">
+  <div id="lightbox" class="fixed inset-0 z-[100] opacity-0 pointer-events-none transition-opacity duration-300 bg-slate-950/60 backdrop-blur-xl overflow-hidden" role="dialog" aria-modal="true" aria-label="Galeri foto bukti">
     <!-- Drag handle -->
-    <div id="lightbox-handle" class="lightbox-ui absolute top-3 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-white/30 z-20"></div>
+    <div id="lightbox-handle" class="lightbox-ui absolute top-3 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-white/30 z-20" aria-hidden="true"></div>
 
-    <button type="button" onclick="closeLightbox()" aria-label="Tutup" id="lightbox-close" class="lightbox-ui absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 active:scale-90 transition-all text-white z-20">
+    <button type="button" onclick="closeLightbox()" aria-label="Tutup galeri foto" id="lightbox-close" class="lightbox-ui absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 active:scale-90 transition-all text-white z-20">
       <iconify-icon icon="solar:close-circle-linear" class="text-2xl"></iconify-icon>
     </button>
 
-    <!-- Photo counter -->
-    <div id="lightbox-counter" class="lightbox-ui absolute top-6 left-1/2 -translate-x-1/2 text-xs font-semibold text-white/80 bg-white/10 rounded-full px-3 py-1 z-20">
+    <!-- Photo counter (aria-live for screen readers) -->
+    <div id="lightbox-counter" class="lightbox-ui absolute top-6 left-1/2 -translate-x-1/2 text-xs font-semibold text-white/80 bg-white/10 rounded-full px-3 py-1 z-20" aria-live="polite" aria-atomic="true">
       1 / 2
     </div>
 
@@ -284,10 +369,10 @@
     </div>
 
     <!-- Shared element transition layer -->
-    <img id="lightbox-fly" src="" alt="" draggable="false">
+    <img id="lightbox-fly" src="" alt="" draggable="false" aria-hidden="true">
 
     <!-- Dot indicators -->
-    <div id="lightbox-dots" class="lightbox-ui absolute bottom-40 left-1/2 -translate-x-1/2 flex gap-1.5 z-20"></div>
+    <div id="lightbox-dots" class="lightbox-ui absolute bottom-40 left-1/2 -translate-x-1/2 flex gap-1.5 z-20" aria-hidden="true"></div>
 
     <div id="lightbox-caption" class="lightbox-ui absolute bottom-14 left-1/2 -translate-x-1/2 text-center px-6 w-full max-w-[560px] z-20">
       <p class="text-[13px] font-semibold text-white">Catatan teknisi</p>
@@ -392,6 +477,59 @@
       ],
     };
 
+    // ─── AUTO-REFRESH ────────────────────────────────────────────────────────
+    const REFRESH_INTERVAL_MS = 90000; // 90 seconds
+    let lastLoadedAt = new Date();
+    let refreshTimer = null;
+
+    function formatLastLoaded(date) {
+      return `Dimuat ${date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta' })}`;
+    }
+
+    function updateLastLoadedLabel() {
+      const el = document.getElementById('last-loaded-label');
+      if (el) el.textContent = formatLastLoaded(lastLoadedAt);
+    }
+
+    function performRefresh() {
+      // In production: fetch fresh PAGE_DATA from API, then re-render.
+      // For now: simulate refresh by reloading the page.
+      lastLoadedAt = new Date();
+      updateLastLoadedLabel();
+      // Production: fetchFreshData().then(data => { Object.assign(PAGE_DATA, data); renderPage(); });
+      window.location.reload();
+    }
+
+    function startAutoRefresh() {
+      stopAutoRefresh();
+      refreshTimer = setInterval(() => {
+        if (!document.hidden) {
+          performRefresh();
+        }
+      }, REFRESH_INTERVAL_MS);
+    }
+
+    function stopAutoRefresh() {
+      if (refreshTimer) {
+        clearInterval(refreshTimer);
+        refreshTimer = null;
+      }
+    }
+
+    // Refresh when tab becomes visible again
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        // If page has been hidden for > 60s, refresh
+        const elapsed = Date.now() - lastLoadedAt.getTime();
+        if (elapsed > 60000) {
+          performRefresh();
+        }
+        startAutoRefresh();
+      } else {
+        stopAutoRefresh();
+      }
+    });
+
     // ─── WINDOWED RAIL LOGIC ─────────────────────────────────────────────────
     // Progressive reveal: tampilkan dari awal sampai current + 1, minimal 3 node.
     function getVisibleSteps(steps, currentStepIndex) {
@@ -402,6 +540,7 @@
 
     // ─── GET EVIDENCE FOR STEP ───────────────────────────────────────────────
     function getEvidenceForStep(stepKey) {
+      if (!PAGE_DATA.evidencePhotos || !PAGE_DATA.evidencePhotos.length) return null;
       return PAGE_DATA.evidencePhotos.find(
         (ev) => ev.stepKey === stepKey && ev.visibleToCustomer
       ) || null;
@@ -410,6 +549,14 @@
     // ─── RENDER STATUS RAIL ──────────────────────────────────────────────────
     function renderStatusRail() {
       const { steps, service } = PAGE_DATA;
+
+      if (!steps || !steps.length) {
+        // Empty state: hide rail section entirely
+        const railSection = document.getElementById('status-rail')?.closest('section');
+        if (railSection) railSection.style.display = 'none';
+        return;
+      }
+
       const visibleSteps = getVisibleSteps(steps, service.currentStepIndex);
       const railEl = document.getElementById('status-rail');
       railEl.innerHTML = '';
@@ -418,27 +565,30 @@
         const isLast = index === visibleSteps.length - 1;
         const evidence = getEvidenceForStep(step.key);
 
-        const node = document.createElement('div');
+        const node = document.createElement('li');
         node.className = `relative flex gap-4 ${isLast ? '' : 'pb-7'}`;
+
+        // Accessibility: mark current step
+        if (step.status === 'current') {
+          node.setAttribute('aria-current', 'step');
+        }
 
         // Left column: icon + connector line
         const leftCol = document.createElement('div');
         leftCol.className = 'relative w-6 shrink-0 flex justify-center';
+        leftCol.setAttribute('aria-hidden', 'true');
 
         if (step.status === 'done') {
-          // Completed node — check icon
           leftCol.innerHTML = `
             <iconify-icon icon="solar:check-circle-bold" class="relative z-10 text-[21px] text-slate-400/50"></iconify-icon>
             ${!isLast ? '<div class="absolute top-[21px] -bottom-7 w-px bg-slate-200"></div>' : ''}
           `;
         } else if (step.status === 'current') {
-          // Current node — blue dot with glow
           leftCol.innerHTML = `
             <div class="relative z-10 w-[20px] h-[20px] min-w-[20px] min-h-[20px] shrink-0 mt-0.5 rounded-full bg-blue-500 border-[3px] border-white shadow-[0_0_0_4px_rgba(59,130,246,0.15)]"></div>
             ${!isLast ? '<div class="absolute top-[24px] -bottom-7 w-px bg-slate-200"></div>' : ''}
           `;
         } else {
-          // Next/upcoming node — empty circle
           leftCol.innerHTML = `
             <div class="relative z-10 w-[20px] h-[20px] min-w-[20px] min-h-[20px] shrink-0 mt-0.5 rounded-full border-2 border-slate-200 bg-white"></div>
             ${!isLast ? '<div class="absolute top-[24px] -bottom-7 w-px bg-slate-200"></div>' : ''}
@@ -453,18 +603,17 @@
 
         if (step.status === 'done') {
           rightCol.innerHTML = `
-            <p class="text-[13px] font-medium text-slate-950">${step.label}</p>
-            ${step.completedAtLabel ? `<p class="text-[11px] text-slate-500 mt-0.5">${step.completedAtLabel}</p>` : ''}
+            <p class="text-[13px] font-medium text-slate-950">${escapeHtml(step.label)}</p>
+            ${step.completedAtLabel ? `<p class="text-[11px] text-slate-500 mt-0.5">${escapeHtml(step.completedAtLabel)}</p>` : ''}
           `;
         } else if (step.status === 'current') {
           rightCol.innerHTML = `
-            <p class="text-[15px] font-semibold text-slate-950 tracking-tight">${step.label}</p>
-            ${step.startedAtLabel ? `<p class="text-[11px] text-slate-500 mt-0.5">${step.startedAtLabel}</p>` : ''}
+            <p class="text-[15px] font-semibold text-slate-950 tracking-tight">${escapeHtml(step.label)}</p>
+            ${step.startedAtLabel ? `<p class="text-[11px] text-slate-500 mt-0.5">${escapeHtml(step.startedAtLabel)}</p>` : ''}
           `;
         } else {
-          // next / upcoming — muted
           rightCol.innerHTML = `
-            <p class="text-[14px] font-medium text-slate-500 opacity-60">${step.label}</p>
+            <p class="text-[14px] font-medium text-slate-500 opacity-70">${escapeHtml(step.label)}</p>
           `;
         }
 
@@ -488,16 +637,18 @@
       const header = document.createElement('div');
       header.className = 'flex items-center justify-between gap-2 mb-2';
       header.innerHTML = `
-        <p class="text-[12px] font-semibold text-slate-950">${evidence.title}</p>
-        <span class="text-[11px] font-semibold text-slate-500">${evidence.capturedAtLabel}</span>
+        <p class="text-[12px] font-semibold text-slate-950">${escapeHtml(evidence.title)}</p>
+        <span class="text-[11px] font-semibold text-slate-500">${escapeHtml(evidence.capturedAtLabel)}</span>
       `;
       card.appendChild(header);
 
       // Description
-      const desc = document.createElement('p');
-      desc.className = 'text-[13px] text-slate-500 leading-[19px]';
-      desc.textContent = evidence.description;
-      card.appendChild(desc);
+      if (evidence.description) {
+        const desc = document.createElement('p');
+        desc.className = 'text-[13px] text-slate-500 leading-[19px]';
+        desc.textContent = evidence.description;
+        card.appendChild(desc);
+      }
 
       // Photos or empty state
       if (evidence.photos && evidence.photos.length > 0) {
@@ -510,12 +661,20 @@
           const btn = document.createElement('button');
           btn.type = 'button';
           btn.className = 'group focus:outline-none rounded-xl focus-visible:ring-2 focus-visible:ring-[#16465B]/25 relative flex-shrink-0';
-          btn.setAttribute('aria-label', `Lihat foto bukti ${index + 1}`);
+          btn.setAttribute('aria-label', `Lihat foto bukti ${index + 1} dari ${evidence.photos.length}`);
           btn.onclick = () => openLightbox(btn.querySelector('img'), index, evidence);
           const img = document.createElement('img');
           img.src = photo.thumb;
           img.alt = `Bukti ${index + 1}`;
           img.className = 'evidence-thumb w-14 h-14 rounded-xl object-cover bg-slate-100 transition-transform duration-200 group-active:scale-95 group-hover:opacity-90';
+          // Fallback for broken thumb
+          img.onerror = function() {
+            this.style.display = 'none';
+            const placeholder = document.createElement('div');
+            placeholder.className = 'w-14 h-14 rounded-xl bg-slate-100 flex items-center justify-center';
+            placeholder.innerHTML = '<iconify-icon icon="solar:gallery-broken" class="text-xl text-slate-300"></iconify-icon>';
+            btn.insertBefore(placeholder, btn.firstChild);
+          };
           btn.appendChild(img);
           if (isLast) {
             const overlay = document.createElement('span');
@@ -540,10 +699,19 @@
       return card;
     }
 
+    // ─── UTILITY: HTML ESCAPE ────────────────────────────────────────────────
+    function escapeHtml(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
     // ─── FORMAT NEXT UPDATE ──────────────────────────────────────────────────
     function formatNextUpdate(isoString) {
       if (!isoString) return null;
       const date = new Date(isoString);
+      if (isNaN(date.getTime())) return null;
       const now = new Date();
       const isToday = date.toDateString() === now.toDateString();
       const timeStr = date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta' });
@@ -552,48 +720,101 @@
         : `Update berikutnya: ${date.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Asia/Jakarta' })} pk ${timeStr}`;
     }
 
+    // ─── RENDER AVATAR ───────────────────────────────────────────────────────
+    function renderAvatar(business) {
+      const wrapper = document.getElementById('avatar-wrapper');
+      if (!wrapper) return;
+
+      if (business.avatar_url) {
+        const img = document.createElement('img');
+        img.src = business.avatar_url;
+        img.alt = business.name || 'Profile';
+        img.className = 'w-full h-full rounded-full object-cover';
+        img.onerror = function() {
+          // Fallback to initial on load error
+          this.remove();
+          renderAvatarFallback(wrapper, business.name);
+        };
+        wrapper.appendChild(img);
+      } else {
+        renderAvatarFallback(wrapper, business.name);
+      }
+    }
+
+    function renderAvatarFallback(wrapper, name) {
+      const initial = (name || '?').charAt(0).toUpperCase();
+      const fallback = document.createElement('div');
+      fallback.className = 'avatar-fallback';
+      fallback.textContent = initial;
+      fallback.setAttribute('aria-label', name || 'Bisnis');
+      wrapper.appendChild(fallback);
+    }
+
     // ─── RENDER PAGE ─────────────────────────────────────────────────────────
     function renderPage() {
       const { business, journey, service, steps } = PAGE_DATA;
 
       // Derive current label from steps
-      const currentStep = steps[service.currentStepIndex];
+      const currentStep = steps && steps[service.currentStepIndex];
       const currentLabel = currentStep ? currentStep.label : '';
 
-      // Header
-      document.getElementById('business-avatar').src = business.avatar_url;
-      document.getElementById('business-avatar').alt = business.name;
-      document.getElementById('business-name').textContent = business.name;
-      document.getElementById('case-number').textContent = `Case #${journey.case_number}`;
+      // Header — avatar with fallback
+      renderAvatar(business);
+      document.getElementById('business-name').textContent = business.name || '';
+      document.getElementById('case-number').textContent = journey.case_number ? `Case #${journey.case_number}` : '';
 
       // Case title
       document.getElementById('current-label').textContent = currentLabel;
-      document.getElementById('journey-title').textContent = journey.title;
-      document.getElementById('journey-complaint').textContent = journey.complaint;
+      document.getElementById('journey-title').textContent = journey.title || '';
+
+      // Complaint — hide if empty
+      const complaintEl = document.getElementById('journey-complaint');
+      if (journey.complaint) {
+        complaintEl.textContent = journey.complaint;
+        complaintEl.style.display = '';
+      } else {
+        complaintEl.style.display = 'none';
+      }
 
       // Certainty panel
-      document.getElementById('status-headline').textContent = journey.status_headline;
-      document.getElementById('status-description').textContent = journey.status_description;
-      document.getElementById('responsibility-label').textContent = journey.responsibility_label;
-      document.getElementById('responsibility-badge').textContent = journey.responsibility_badge;
-      document.getElementById('freshness-line').textContent = journey.freshness_line;
-      document.getElementById('next-update-label').textContent = formatNextUpdate(journey.next_update_at) || '';
-      document.getElementById('next-expectation-note').textContent = journey.next_expectation_note;
+      document.getElementById('status-headline').textContent = journey.status_headline || '';
+      document.getElementById('status-description').textContent = journey.status_description || '';
+      document.getElementById('responsibility-label').textContent = journey.responsibility_label || '';
+      document.getElementById('responsibility-badge').textContent = journey.responsibility_badge || '';
+      document.getElementById('freshness-line').textContent = journey.freshness_line || '—';
+
+      // Next update — hide row entirely if no data
+      const nextUpdateLabel = formatNextUpdate(journey.next_update_at);
+      const nextUpdateRow = document.getElementById('next-update-row');
+      if (nextUpdateLabel || journey.next_expectation_note) {
+        nextUpdateRow.style.display = '';
+        document.getElementById('next-update-label').textContent = nextUpdateLabel || 'Belum ada estimasi waktu';
+        document.getElementById('next-expectation-note').textContent = journey.next_expectation_note || '';
+      } else {
+        nextUpdateRow.style.display = 'none';
+      }
 
       // Render data-driven status rail
       renderStatusRail();
 
+      // Refresh bar
+      updateLastLoadedLabel();
+      document.getElementById('btn-refresh').addEventListener('click', performRefresh);
+
       // Share button
       document.getElementById('btn-share').addEventListener('click', handleShare);
+
+      // Start auto-refresh
+      startAutoRefresh();
     }
 
     // ─── SHARE HANDLER ───────────────────────────────────────────────────────
     async function handleShare() {
       const { business, journey, service, steps } = PAGE_DATA;
-      const currentStep = steps[service.currentStepIndex];
+      const currentStep = steps && steps[service.currentStepIndex];
       const shareData = {
-        title: `${journey.title} — ${business.name}`,
-        text: `${currentStep ? currentStep.label : ''} · Case #${journey.case_number}`,
+        title: `${journey.title || ''} — ${business.name || ''}`,
+        text: `${currentStep ? currentStep.label : ''} · Case #${journey.case_number || ''}`,
         url: journey.guest_url,
       };
 
@@ -614,6 +835,8 @@
         const icon = btn.querySelector('iconify-icon');
         icon.setAttribute('icon', 'solar:check-circle-linear');
         setTimeout(() => icon.setAttribute('icon', 'solar:share-linear'), 2000);
+      }).catch(() => {
+        // Clipboard API not available — do nothing gracefully
       });
     }
 
@@ -635,7 +858,10 @@
     let rendered = false;
     let isOpen = false;
     let currentIndex = 0;
+    let lastFocusedElement = null; // For focus trap restore
 
+    // ─── PINCH-TO-ZOOM STATE ─────────────────────────────────────────────────
+    // Improved: no transition during active gesture, use rAF for 60fps rendering.
     let scale = 1;
     let panX = 0;
     let panY = 0;
@@ -660,11 +886,28 @@
     let pinchBasePanX = 0;
     let pinchBasePanY = 0;
     let pinchPanStarted = false;
-    const pinchPanThreshold = 8;
+    const pinchPanThreshold = 4; // Reduced from 8 for smoother response
 
     let lastTapTime = 0;
     let lastTapX = 0;
     let lastTapY = 0;
+
+    // rAF-based rendering for smooth pinch/pan
+    let rafPending = false;
+    let rafTargetScale = 1;
+    let rafTargetPanX = 0;
+    let rafTargetPanY = 0;
+
+    function scheduleZoomRender() {
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(() => {
+        rafPending = false;
+        const card = getCurrentCard();
+        if (!card) return;
+        card.style.transform = `translate3d(${panX}px, ${panY}px, 0) scale(${scale})`;
+      });
+    }
 
     function renderSlides() {
       lightboxTrack.innerHTML = photoSet.map((photo, index) => `
@@ -686,8 +929,12 @@
 
         img.addEventListener('load', markLoaded);
         img.addEventListener('error', () => {
+          // Show error state instead of blank
+          img.classList.add('is-error');
           const shimmer = lightboxTrack.querySelector(`.lightbox-shimmer[data-shimmer-index="${img.dataset.index}"]`);
-          if (shimmer) shimmer.classList.add('is-hidden');
+          if (shimmer) {
+            shimmer.classList.add('is-hidden');
+          }
         });
 
         if (img.complete && img.naturalWidth) markLoaded();
@@ -758,7 +1005,7 @@
     function updateMeta() {
       lightboxCounter.textContent = `${currentIndex + 1} / ${photoSet.length}`;
       lightboxCounter.classList.toggle('hidden', photoSet.length <= 1);
-      lightboxCaptionText.textContent = photoSet[currentIndex].caption;
+      lightboxCaptionText.textContent = photoSet[currentIndex]?.caption || '';
       lightboxHelperText.innerHTML = photoSet.length > 1
         ? 'Cubit untuk memperbesar &middot; Geser untuk melihat foto lain'
         : 'Cubit untuk memperbesar';
@@ -894,37 +1141,34 @@
       }, 340);
     }
 
-    function animateCloseFly(startRect, endRect, src, onDone) {
-      lightboxFly.src = src;
-      lightboxFly.style.transition = 'none';
-      lightboxFly.style.opacity = '1';
-      lightboxFly.style.top = `${startRect.top}px`;
-      lightboxFly.style.left = `${startRect.left}px`;
-      lightboxFly.style.width = `${startRect.width}px`;
-      lightboxFly.style.height = `${startRect.height}px`;
-      lightboxFly.style.borderRadius = '1rem';
+    // ─── FOCUS TRAP ──────────────────────────────────────────────────────────
+    function trapFocus(event) {
+      if (!isOpen) return;
+      if (event.key !== 'Tab') return;
 
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          lightboxTrack.style.opacity = '0';
-          setUiOpacity(0);
+      const focusable = lightbox.querySelectorAll('button:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      if (!focusable.length) return;
 
-          lightboxFly.style.transition =
-            'top 0.30s cubic-bezier(0.22, 1, 0.36, 1), left 0.30s cubic-bezier(0.22, 1, 0.36, 1), width 0.30s cubic-bezier(0.22, 1, 0.36, 1), height 0.30s cubic-bezier(0.22, 1, 0.36, 1), border-radius 0.30s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.16s ease-out';
-          lightboxFly.style.top = `${endRect.top}px`;
-          lightboxFly.style.left = `${endRect.left}px`;
-          lightboxFly.style.width = `${endRect.width}px`;
-          lightboxFly.style.height = `${endRect.height}px`;
-          lightboxFly.style.borderRadius = '0.75rem';
-        });
-      });
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
 
-      window.setTimeout(() => {
-        if (onDone) onDone();
-      }, 330);
+      if (event.shiftKey) {
+        if (document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
     }
 
     function openLightbox(button, index, evidence) {
+      // Save last focused element for restore
+      lastFocusedElement = document.activeElement;
+
       // Set the active photo set from the evidence that was clicked
       if (evidence && evidence.photos) {
         photoSet = evidence.photos;
@@ -986,6 +1230,8 @@
 
             window.setTimeout(() => {
               setUiOpacity(1);
+              // Focus the close button for a11y
+              lightboxClose.focus();
             }, 70);
           });
 
@@ -994,10 +1240,16 @@
           }, 180);
         });
       });
+
+      // Activate focus trap
+      document.addEventListener('keydown', trapFocus);
     }
 
     function closeLightbox() {
       if (!isOpen) return;
+
+      // Deactivate focus trap
+      document.removeEventListener('keydown', trapFocus);
 
       const currentCard = getCurrentCard();
       const thumb = getThumb(currentIndex);
@@ -1071,11 +1323,20 @@
         dragY = 0;
         gesture = null;
         isOpen = false;
+
+        // Restore focus
+        if (lastFocusedElement) {
+          lastFocusedElement.focus();
+          lastFocusedElement = null;
+        }
       }, 360);
     }
 
     function closeLightboxFromDrag() {
       if (!isOpen) return;
+
+      // Deactivate focus trap
+      document.removeEventListener('keydown', trapFocus);
 
       const currentCard = getCurrentCard();
       const thumb = getThumb(currentIndex);
@@ -1088,6 +1349,7 @@
         setTrackPosition(0, false);
         resetUiAndStage();
         isOpen = false;
+        if (lastFocusedElement) { lastFocusedElement.focus(); lastFocusedElement = null; }
         return;
       }
 
@@ -1156,6 +1418,12 @@
         dragY = 0;
         gesture = null;
         isOpen = false;
+
+        // Restore focus
+        if (lastFocusedElement) {
+          lastFocusedElement.focus();
+          lastFocusedElement = null;
+        }
       }, 370);
     }
 
@@ -1196,6 +1464,7 @@
       }, 260);
     }
 
+    // ─── TOUCH HANDLERS (improved pinch smoothness) ──────────────────────────
     lightboxStage.addEventListener('touchstart', (event) => {
       if (!isOpen) return;
 
@@ -1222,8 +1491,15 @@
         pinchBasePanY = panY;
         pinchPanStarted = false;
 
+        // Set transform origin once at start
         setTransformOriginFromPoint(midpoint.x, midpoint.y);
-        getCurrentCard()?.classList.add('no-anim');
+
+        // IMPORTANT: disable CSS transition during active pinch for smooth 60fps
+        const card = getCurrentCard();
+        if (card) {
+          card.classList.add('no-anim');
+          card.style.transition = 'none';
+        }
 
         event.preventDefault();
         return;
@@ -1238,6 +1514,15 @@
         panStartY = touch.clientY;
         panBaseX = panX;
         panBaseY = panY;
+
+        // Disable transition during single-finger pan when zoomed
+        if (scale > 1) {
+          const card = getCurrentCard();
+          if (card) {
+            card.classList.add('no-anim');
+            card.style.transition = 'none';
+          }
+        }
       }
     }, { passive: false });
 
@@ -1250,7 +1535,9 @@
         const midpointDy = midpoint.y - pinchStartMidY;
         const midpointMove = Math.hypot(midpointDx, midpointDy);
 
-        scale = Math.min(4, Math.max(1, pinchStartScale * (getDistance(event.touches) / pinchStartDistance)));
+        // Smooth scale calculation with no minimum jump
+        const rawScale = pinchStartScale * (getDistance(event.touches) / pinchStartDistance);
+        scale = Math.min(5, Math.max(0.8, rawScale)); // Allow slight under-1 for rubber-band feel
 
         if (!pinchPanStarted && midpointMove > pinchPanThreshold) {
           pinchPanStarted = true;
@@ -1260,7 +1547,9 @@
         const targetPanY = pinchPanStarted ? pinchBasePanY + midpointDy : pinchBasePanY;
 
         applyDampedPan(targetPanX, targetPanY);
-        applyZoom(false);
+
+        // Use rAF for buttery smooth rendering
+        scheduleZoomRender();
 
         event.preventDefault();
         return;
@@ -1294,7 +1583,7 @@
         const targetPanX = panBaseX + (touch.clientX - panStartX);
         const targetPanY = panBaseY + (touch.clientY - panStartY);
         applyDampedPan(targetPanX, targetPanY);
-        applyZoom(false);
+        scheduleZoomRender();
         event.preventDefault();
         return;
       }
@@ -1328,16 +1617,35 @@
       if (isPinching) {
         isPinching = false;
         pinchPanStarted = false;
-        getCurrentCard()?.classList.remove('no-anim');
 
+        const card = getCurrentCard();
+        if (card) {
+          card.classList.remove('no-anim');
+          card.style.transition = '';
+        }
+
+        // Snap back to scale 1 if close enough, with smooth animation
         if (scale <= 1.06) {
           resetZoom(true);
+        } else if (scale > 5) {
+          // Cap at max
+          scale = 5;
+          applyZoom(true);
         } else {
           applyDampedPan(panX, panY);
           applyZoom(true);
         }
 
         return;
+      }
+
+      // Re-enable transitions after single-finger pan
+      if (scale > 1) {
+        const card = getCurrentCard();
+        if (card) {
+          card.classList.remove('no-anim');
+          card.style.transition = '';
+        }
       }
 
       const now = Date.now();
