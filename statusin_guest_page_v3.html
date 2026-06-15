@@ -71,9 +71,9 @@
 </head>
 
 
-<body class="min-h-screen bg-white px-4 sm:px-6 pt-0 pb-4 overflow-x-hidden">
+<body class="min-h-screen bg-white pt-0 pb-4 overflow-x-hidden">
 
-  <!-- Sticky Header — transparent on gradient, white on scroll -->
+  <!-- Sticky Header — frosted glass teal on scroll -->
   <div id="sticky-header" class="sticky top-0 z-50 transition-all duration-300" style="background: transparent;">
     <div class="max-w-[560px] mx-auto px-5 sm:px-6 py-4 flex items-center justify-between">
       <button class="flex items-center gap-3 text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-white/25 rounded-2xl transition-all" aria-label="Profil bisnis">
@@ -90,14 +90,20 @@
     </div>
   </div>
 
-  <!-- Gradient Hero + Wave -->
+  <!-- Gradient Hero + Visual Motifs + Wave -->
   <div class="relative overflow-hidden -mt-[72px]">
     <!-- Gradient background -->
     <div class="absolute inset-0 bg-gradient-to-br from-[#0F3440] via-[#16465B] to-[#1E6F8A]"></div>
-    <!-- Duotone Accent Pop: warm amber glow contrasting cool teal -->
-    <div class="absolute top-[-10%] right-[-8%] w-[280px] h-[280px] rounded-full blur-[100px] bg-[#F4A261]/[0.12]"></div>
-    <!-- Cool accent for depth -->
-    <div class="absolute bottom-[5%] left-[-12%] w-[220px] h-[220px] rounded-full blur-[90px] bg-[#4ECDC4]/[0.08]"></div>
+
+    <!-- Visual Motif Layer 1: Fine-line dot pattern -->
+    <div class="absolute inset-0 opacity-[0.06]" style="background-image: radial-gradient(circle, #A8E6CF 1px, transparent 1px); background-size: 24px 24px;"></div>
+
+    <!-- Visual Motif Layer 2: Glassmorphism shapes -->
+    <div class="absolute top-[15%] right-[-5%] w-[200px] h-[200px] rounded-full blur-[40px] bg-[#A8E6CF]/[0.10]"></div>
+    <div class="absolute bottom-[20%] left-[-8%] w-[160px] h-[160px] rounded-[40%_60%_70%_30%/40%_50%_60%_50%] blur-[35px] bg-[#A8E6CF]/[0.07]"></div>
+
+    <!-- Duotone Accent Pop: warm amber -->
+    <div class="absolute top-[-5%] right-[10%] w-[180px] h-[180px] rounded-full blur-[80px] bg-[#F4A261]/[0.08]"></div>
 
     <!-- Hero content -->
     <div class="relative z-10 max-w-[560px] mx-auto px-5 sm:px-6">
@@ -667,37 +673,23 @@
 
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY;
-      const threshold = 120; // roughly where wave ends
+      const threshold = 120;
 
       if (scrollY > threshold && !headerScrolled) {
         headerScrolled = true;
-        stickyHeader.style.background = 'rgba(255,255,255,0.92)';
+        // Frosted glass teal — stays in the same color family
+        stickyHeader.style.background = 'rgba(15, 52, 64, 0.85)';
         stickyHeader.style.backdropFilter = 'blur(20px)';
-        stickyHeader.style.borderBottom = '1px solid rgba(15,23,42,0.04)';
-        stickyHeader.style.boxShadow = '0 10px 34px rgba(15,23,42,0.045)';
-        headerBizName.style.color = '#0f172a';
-        headerCaseNum.style.color = '#64748b';
-        headerShareIcon.style.color = '#16465B';
-        headerShareBtn.style.background = 'rgba(255,255,255,0.86)';
-        headerShareBtn.style.borderColor = 'rgba(255,255,255,1)';
-        headerShareBtn.style.boxShadow = '0 8px 20px rgba(15,23,42,0.08)';
-        headerAvatar.style.background = 'white';
-        headerAvatar.style.boxShadow = '0 8px 20px rgba(15,23,42,0.10)';
-        headerAvatar.style.ringColor = 'rgba(15,23,42,0.06)';
+        stickyHeader.style.webkitBackdropFilter = 'blur(20px)';
+        stickyHeader.style.borderBottom = '1px solid rgba(255,255,255,0.08)';
+        stickyHeader.style.boxShadow = '0 8px 32px rgba(0,0,0,0.20)';
       } else if (scrollY <= threshold && headerScrolled) {
         headerScrolled = false;
         stickyHeader.style.background = 'transparent';
         stickyHeader.style.backdropFilter = '';
+        stickyHeader.style.webkitBackdropFilter = '';
         stickyHeader.style.borderBottom = 'none';
         stickyHeader.style.boxShadow = 'none';
-        headerBizName.style.color = 'white';
-        headerCaseNum.style.color = 'rgba(255,255,255,0.6)';
-        headerShareIcon.style.color = 'white';
-        headerShareBtn.style.background = 'rgba(255,255,255,0.1)';
-        headerShareBtn.style.borderColor = 'rgba(255,255,255,0.1)';
-        headerShareBtn.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-        headerAvatar.style.background = 'rgba(255,255,255,0.2)';
-        headerAvatar.style.boxShadow = '0 8px 20px rgba(0,0,0,0.20)';
       }
     });
 
