@@ -40,6 +40,35 @@
   <style>
     @keyframes shimmer { 100% { transform: translateX(100%); } }
 
+    /* ─── Conductor Rail: Statusin Identity ─────────────────────────── */
+    @keyframes conductor-flow {
+      0% { background-position-y: 0px; }
+      100% { background-position-y: 12px; }
+    }
+
+    .rail-line-done {
+      width: 1.5px;
+      background: rgba(22, 70, 91, 0.15);
+    }
+
+    .rail-line-active {
+      width: 1.5px;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        #16465B 0px,
+        #16465B 5px,
+        transparent 5px,
+        transparent 10px
+      );
+      background-size: 1.5px 10px;
+      animation: conductor-flow 1.2s linear infinite;
+    }
+
+    .rail-line-upcoming {
+      width: 1px;
+      background: rgba(226, 232, 240, 0.8);
+    }
+
     #lightbox { -webkit-tap-highlight-color: transparent; overscroll-behavior: contain; touch-action: none; }
     #lightbox-stage { will-change: transform; }
     #lightbox-track { display: flex; width: 100%; height: 100%; transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform; }
@@ -71,66 +100,56 @@
 </head>
 
 
-<body class="min-h-screen bg-white pt-0 pb-4 overflow-x-hidden">
+<body class="min-h-screen bg-white px-4 sm:px-6 pt-0 pb-4 overflow-x-hidden">
 
-  <!-- Sticky Header — frosted glass teal on scroll -->
-  <div id="sticky-header" class="sticky top-0 z-50 transition-all duration-300" style="background: transparent;">
-    <div class="max-w-[560px] mx-auto px-5 sm:px-6 py-4 flex items-center justify-between">
-      <button class="flex items-center gap-3 text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-white/25 rounded-2xl transition-all" aria-label="Profil bisnis">
-        <div id="avatar-wrapper" class="w-11 h-11 rounded-full bg-white/20 p-[2px] group-active:scale-95 transition-transform duration-200 shadow-[0_8px_20px_rgba(0,0,0,0.20)] ring-1 ring-white/20">
-        </div>
-        <div>
-          <h2 id="business-name" class="text-[15px] font-bold tracking-tight text-white transition-colors duration-300"></h2>
-          <p id="case-number" class="text-[11px] font-medium mt-0.5 text-white/60 transition-colors duration-300"></p>
-        </div>
-      </button>
-      <button id="btn-share" class="w-8 h-8 rounded-full flex items-center justify-center active:scale-90 transition-all focus:outline-none focus-visible:ring-2 bg-white/10 hover:bg-white/20 active:bg-white/25 focus-visible:ring-white/30 border border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.15)]" aria-label="Bagikan link status">
-        <iconify-icon icon="solar:share-linear" class="text-lg text-white transition-colors duration-300"></iconify-icon>
-      </button>
-    </div>
+  <!-- Subtle ambient background -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div class="absolute -top-40 -left-32 w-[560px] h-[560px] rounded-full blur-[140px] bg-[#F6F1EA]/70"></div>
+    <div class="absolute -bottom-44 -right-28 w-[620px] h-[620px] rounded-full blur-[150px] bg-[#FF5A5F]/7"></div>
+    <div class="absolute top-[32%] left-[52%] -translate-x-1/2 w-[420px] h-[420px] rounded-full blur-[130px] bg-[#16465B]/4"></div>
   </div>
 
-  <!-- Gradient Hero (rounded bottom) -->
-  <div class="relative overflow-hidden -mt-[72px] rounded-b-[2.5rem]">
-    <!-- Gradient background -->
-    <div class="absolute inset-0 bg-gradient-to-br from-[#0F3440] via-[#16465B] to-[#1E6F8A]"></div>
-
-    <!-- Visual Motif Layer 1: Fine-line dot pattern -->
-    <div class="absolute inset-0 opacity-[0.06]" style="background-image: radial-gradient(circle, #A8E6CF 1px, transparent 1px); background-size: 24px 24px;"></div>
-
-    <!-- Visual Motif Layer 2: Glassmorphism shapes -->
-    <div class="absolute top-[15%] right-[-5%] w-[200px] h-[200px] rounded-full blur-[40px] bg-[#A8E6CF]/[0.10]"></div>
-    <div class="absolute bottom-[20%] left-[-8%] w-[160px] h-[160px] rounded-[40%_60%_70%_30%/40%_50%_60%_50%] blur-[35px] bg-[#A8E6CF]/[0.07]"></div>
-
-    <!-- Duotone Accent Pop: warm amber -->
-    <div class="absolute top-[-5%] right-[10%] w-[180px] h-[180px] rounded-full blur-[80px] bg-[#F4A261]/[0.08]"></div>
-
-    <!-- Hero content -->
-    <div class="relative z-10 max-w-[560px] mx-auto px-5 sm:px-6">
-      <!-- Spacer for sticky header -->
-      <div class="h-[72px]"></div>
-
-      <!-- Hero section -->
-      <section class="pb-14 pt-3" aria-labelledby="journey-title">
-        <p id="journey-complaint" class="text-[13px] text-white/60 font-medium mb-2"></p>
-        <h1 id="journey-title" class="text-[26px] sm:text-[28px] font-extrabold text-white tracking-tight leading-[1.2] mb-3"></h1>
-        <div class="flex items-center gap-2.5 flex-wrap">
-          <span id="hero-badge" class="inline-flex items-center gap-1.5 text-[12px] font-bold text-white bg-white/[0.14] px-3 py-1.5 rounded-full backdrop-blur-sm">
-            <iconify-icon icon="solar:user-check-rounded-bold" class="text-sm"></iconify-icon>
-            <span id="hero-badge-text"></span>
-          </span>
-          <span id="hero-freshness" class="text-[12px] font-medium text-white/50"></span>
-        </div>
-      </section>
-    </div>
-  </div>
-
-  <!-- Main content area (white) — card overlaps gradient -->
-  <main class="relative z-10 w-full max-w-[560px] mx-auto px-4 sm:px-6 -mt-5">
+  <!-- Guest Status Link View -->
+  <main class="relative z-10 w-full max-w-[560px] mx-auto">
     <div class="isolate flex flex-col w-full mx-auto relative bg-transparent text-slate-950">
-      <div class="relative z-20 px-1 sm:px-0 pt-0 pb-10">
 
-        <!-- ═══ CERTAINTY SUMMARY ═══ Single container -->
+      <!-- Sticky Header -->
+      <div class="sticky top-0 z-50 -mx-4 sm:-mx-6 px-5 sm:px-6 py-4 flex items-center justify-between bg-white/78 backdrop-blur-2xl border-b border-slate-950/[0.04] shadow-[0_10px_34px_rgba(15,23,42,0.045)]">
+        <button class="flex items-center gap-3 text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16465B]/25 rounded-2xl transition-all" aria-label="Profil bisnis">
+          <div id="avatar-wrapper" class="w-12 h-12 rounded-full bg-white p-[2px] group-active:scale-95 transition-transform duration-200 shadow-[0_12px_30px_rgba(15,23,42,0.12)] ring-1 ring-slate-950/[0.06]">
+          </div>
+          <div>
+            <h2 id="business-name" class="text-base font-bold tracking-tight text-slate-950 group-hover:text-slate-700 transition-colors"></h2>
+            <p id="case-number" class="text-xs font-medium mt-0.5 text-slate-500 group-hover:text-[#16465B] transition-colors"></p>
+          </div>
+        </button>
+        <button id="btn-share" class="w-8 h-8 rounded-full flex items-center justify-center active:scale-90 transition-all focus:outline-none focus-visible:ring-2 bg-white/86 hover:bg-white active:bg-slate-100 focus-visible:ring-[#16465B]/20 border border-white shadow-[0_8px_20px_rgba(15,23,42,0.08)] ring-1 ring-slate-950/[0.04]" aria-label="Bagikan link status">
+          <iconify-icon icon="solar:share-linear" class="text-lg text-[#16465B]"></iconify-icon>
+        </button>
+      </div>
+
+      <!-- Main Content -->
+      <div class="relative z-20 px-1 sm:px-0 pt-6 pb-10">
+
+        <!-- ═══ HERO SECTION ═══ Commanding first impression -->
+        <section class="mb-6" aria-labelledby="journey-title">
+          <!-- Eyebrow: case info -->
+          <p id="journey-complaint" class="text-[13px] text-slate-500 font-medium mb-1"></p>
+
+          <!-- Big status title — the most important thing on the page -->
+          <h1 id="journey-title" class="text-[26px] sm:text-[28px] font-extrabold text-slate-950 tracking-tight leading-[1.2] mb-3"></h1>
+
+          <!-- Inline badge: responsibility + freshness — answers 2 questions in 1 line -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <span id="hero-badge" class="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#16465B] bg-[#16465B]/[0.10] px-3 py-1.5 rounded-full">
+              <iconify-icon icon="solar:user-check-rounded-bold" class="text-sm"></iconify-icon>
+              <span id="hero-badge-text"></span>
+            </span>
+            <span id="hero-freshness" class="text-[12px] font-medium text-slate-400"></span>
+          </div>
+        </section>
+
+        <!-- ═══ CERTAINTY SUMMARY ═══ -->
         <section class="mb-6 bg-white/86 backdrop-blur-2xl border border-white rounded-[1.75rem] p-5 shadow-[0_18px_54px_rgba(15,23,42,0.08)] ring-1 ring-slate-950/[0.045]" aria-label="Ringkasan status">
           <p class="text-[10px] text-[#16465B] font-extrabold uppercase tracking-wider mb-2">Status Saat Ini</p>
           <p id="status-description" class="text-[14px] font-medium text-slate-700 leading-[21px]"></p>
@@ -304,21 +323,32 @@
 
       visibleSteps.forEach((step, index) => {
         const isLast = index === visibleSteps.length - 1;
+        const nextStep = visibleSteps[index + 1];
         const evidence = getEvidenceForStep(step.key);
         const node = document.createElement('li');
         node.className = `relative flex gap-4 ${isLast ? '' : 'pb-7'}`;
         if (step.status === 'current') node.setAttribute('aria-current', 'step');
+
+        // Determine connector line class based on context
+        let lineClass = 'rail-line-upcoming'; // default
+        if (step.status === 'done' && nextStep && nextStep.status === 'done') {
+          lineClass = 'rail-line-done';
+        } else if (step.status === 'done' && nextStep && nextStep.status === 'current') {
+          lineClass = 'rail-line-done';
+        } else if (step.status === 'current') {
+          lineClass = 'rail-line-active'; // ANIMATED — Statusin identity
+        }
 
         const leftCol = document.createElement('div');
         leftCol.className = 'relative w-6 shrink-0 flex justify-center';
         leftCol.setAttribute('aria-hidden', 'true');
 
         if (step.status === 'done') {
-          leftCol.innerHTML = `<iconify-icon icon="solar:check-circle-bold" class="relative z-10 text-[21px] text-slate-400/50"></iconify-icon>${!isLast ? '<div class="absolute top-[21px] -bottom-7 w-px bg-slate-200"></div>' : ''}`;
+          leftCol.innerHTML = `<iconify-icon icon="solar:check-circle-bold" class="relative z-10 text-[21px] text-[#16465B]/30"></iconify-icon>${!isLast ? `<div class="absolute top-[21px] -bottom-7 ${lineClass}"></div>` : ''}`;
         } else if (step.status === 'current') {
-          leftCol.innerHTML = `<div class="relative z-10 w-[20px] h-[20px] min-w-[20px] min-h-[20px] shrink-0 mt-0.5 rounded-full bg-blue-500 border-[3px] border-white shadow-[0_0_0_4px_rgba(59,130,246,0.15)]"></div>${!isLast ? '<div class="absolute top-[24px] -bottom-7 w-px bg-slate-200"></div>' : ''}`;
+          leftCol.innerHTML = `<div class="relative z-10 w-[20px] h-[20px] min-w-[20px] min-h-[20px] shrink-0 mt-0.5 rounded-full bg-[#16465B] border-[3px] border-white shadow-[0_0_0_4px_rgba(22,70,91,0.12)]"></div>${!isLast ? `<div class="absolute top-[24px] -bottom-7 ${lineClass}"></div>` : ''}`;
         } else {
-          leftCol.innerHTML = `<div class="relative z-10 w-[20px] h-[20px] min-w-[20px] min-h-[20px] shrink-0 mt-0.5 rounded-full border-2 border-slate-200 bg-white"></div>${!isLast ? '<div class="absolute top-[24px] -bottom-7 w-px bg-slate-200"></div>' : ''}`;
+          leftCol.innerHTML = `<div class="relative z-10 w-[20px] h-[20px] min-w-[20px] min-h-[20px] shrink-0 mt-0.5 rounded-full border-2 border-slate-200 bg-white"></div>${!isLast ? `<div class="absolute top-[24px] -bottom-7 ${lineClass}"></div>` : ''}`;
         }
         node.appendChild(leftCol);
 
@@ -444,7 +474,8 @@
       document.getElementById('hero-badge-text').textContent = `${journey.responsibility_label || ''} ${journey.responsibility_badge || ''}`.trim();
       document.getElementById('hero-freshness').textContent = journey.freshness_line || '';
 
-      // Certainty summary (combined)
+      // Certainty summary
+      document.getElementById('status-description').textContent = journey.status_description || '';
       const nextUpdateLabel = formatNextUpdate(journey.next_update_at);
       const nxtRow = document.getElementById('next-update-row');
       if (nextUpdateLabel || journey.next_expectation_note) {
@@ -452,9 +483,6 @@
         document.getElementById('next-update-text').textContent = nextUpdateLabel || 'Belum ada estimasi waktu';
         document.getElementById('next-expectation-note').textContent = journey.next_expectation_note || '';
       } else { nxtRow.style.display = 'none'; }
-
-      // Status detail (now in certainty summary, no headline)
-      document.getElementById('status-description').textContent = journey.status_description || '';
 
       // Rail + CTA
       renderStatusRail();
@@ -654,34 +682,6 @@
     lightboxStage.addEventListener('dblclick', (e) => { if (!isOpen) return; if (isPointInsideCurrentPhoto(e.clientX, e.clientY)) toggleZoomAt(e.clientX, e.clientY); });
     window.addEventListener('resize', () => { if (isOpen) setTrackPosition(0, false); });
     document.addEventListener('keydown', (e) => { if (!isOpen) return; if (e.key === 'Escape') closeLightbox(); if (e.key === 'ArrowRight') goToPhoto(currentIndex+1); if (e.key === 'ArrowLeft') goToPhoto(currentIndex-1); });
-
-    // ─── STICKY HEADER SCROLL BEHAVIOR ─────────────────────────────────────
-    const stickyHeader = document.getElementById('sticky-header');
-    const headerBizName = document.getElementById('business-name');
-    const headerCaseNum = document.getElementById('case-number');
-    const headerShareIcon = document.querySelector('#btn-share iconify-icon');
-    const headerShareBtn = document.getElementById('btn-share');
-    const headerAvatar = document.getElementById('avatar-wrapper');
-    let headerScrolled = false;
-
-    window.addEventListener('scroll', () => {
-      const scrollY = window.scrollY;
-      const threshold = 120;
-
-      if (scrollY > threshold && !headerScrolled) {
-        headerScrolled = true;
-        stickyHeader.style.background = 'rgba(15, 52, 64, 0.85)';
-        stickyHeader.style.backdropFilter = 'blur(20px)';
-        stickyHeader.style.webkitBackdropFilter = 'blur(20px)';
-        stickyHeader.style.boxShadow = '0 4px 24px rgba(0,0,0,0.15)';
-      } else if (scrollY <= threshold && headerScrolled) {
-        headerScrolled = false;
-        stickyHeader.style.background = 'transparent';
-        stickyHeader.style.backdropFilter = '';
-        stickyHeader.style.webkitBackdropFilter = '';
-        stickyHeader.style.boxShadow = 'none';
-      }
-    });
 
     // ─── INIT ────────────────────────────────────────────────────────────────
     renderPage();
