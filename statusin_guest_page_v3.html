@@ -43,25 +43,25 @@
     /* ─── Conductor Rail: Statusin Identity ─────────────────────────── */
     @keyframes conductor-flow {
       0% { background-position-y: 0px; }
-      100% { background-position-y: 12px; }
+      100% { background-position-y: 7px; }
     }
 
     .rail-line-done {
-      width: 1.5px;
-      background: rgba(22, 70, 91, 0.30);
+      width: 1px;
+      background: rgba(22, 70, 91, 0.25);
     }
 
     .rail-line-active {
-      width: 1.5px;
+      width: 1px;
       background-image: repeating-linear-gradient(
         to bottom,
-        #16465B 0px,
-        #16465B 5px,
-        transparent 5px,
-        transparent 10px
+        rgba(22, 70, 91, 0.6) 0px,
+        rgba(22, 70, 91, 0.6) 3px,
+        transparent 3px,
+        transparent 7px
       );
-      background-size: 1.5px 10px;
-      animation: conductor-flow 1.2s linear infinite;
+      background-size: 1px 7px;
+      animation: conductor-flow 1.5s linear infinite;
     }
 
     .rail-line-upcoming {
@@ -344,11 +344,11 @@
         leftCol.setAttribute('aria-hidden', 'true');
 
         if (step.status === 'done') {
-          leftCol.innerHTML = `<iconify-icon icon="solar:check-circle-bold" class="relative z-10 text-[21px] text-[#16465B]/45"></iconify-icon>${!isLast ? `<div class="absolute top-[19px] -bottom-7 left-1/2 -translate-x-1/2 ${lineClass}"></div>` : ''}`;
+          leftCol.innerHTML = `<iconify-icon icon="solar:check-circle-bold" class="relative z-10 text-[21px] text-[#16465B]/45"></iconify-icon>${!isLast ? `<div class="absolute top-[20px] bottom-0 left-1/2 -translate-x-1/2 ${lineClass}"></div>` : ''}`;
         } else if (step.status === 'current') {
-          leftCol.innerHTML = `<div class="relative z-10 w-[20px] h-[20px] min-w-[20px] min-h-[20px] shrink-0 mt-0.5 rounded-full bg-[#16465B] border-[3px] border-white shadow-[0_0_0_4px_rgba(22,70,91,0.12)]"></div>${!isLast ? `<div class="absolute top-[22px] -bottom-7 left-1/2 -translate-x-1/2 ${lineClass}"></div>` : ''}`;
+          leftCol.innerHTML = `<div class="relative z-10 w-[20px] h-[20px] min-w-[20px] min-h-[20px] shrink-0 mt-0.5 rounded-full bg-[#16465B] border-[3px] border-white shadow-[0_0_0_4px_rgba(22,70,91,0.12)]"></div>${!isLast ? `<div class="absolute top-[22px] bottom-0 left-1/2 -translate-x-1/2 ${lineClass}"></div>` : ''}`;
         } else {
-          leftCol.innerHTML = `<div class="relative z-10 w-[20px] h-[20px] min-w-[20px] min-h-[20px] shrink-0 mt-0.5 rounded-full border-2 border-slate-200 bg-white"></div>${!isLast ? `<div class="absolute top-[22px] -bottom-7 left-1/2 -translate-x-1/2 ${lineClass}"></div>` : ''}`;
+          leftCol.innerHTML = `<div class="relative z-10 w-[20px] h-[20px] min-w-[20px] min-h-[20px] shrink-0 mt-0.5 rounded-full border-2 border-slate-200 bg-white"></div>${!isLast ? `<div class="absolute top-[22px] bottom-0 left-1/2 -translate-x-1/2 ${lineClass}"></div>` : ''}`;
         }
         node.appendChild(leftCol);
 
