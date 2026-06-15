@@ -73,33 +73,39 @@
 
 <body class="min-h-screen bg-white px-4 sm:px-6 pt-0 pb-4 overflow-x-hidden">
 
-  <!-- Gradient Header + Wave -->
-  <div class="relative overflow-hidden">
+  <!-- Sticky Header — transparent on gradient, white on scroll -->
+  <div id="sticky-header" class="sticky top-0 z-50 transition-all duration-300" style="background: transparent;">
+    <div class="max-w-[560px] mx-auto px-5 sm:px-6 py-4 flex items-center justify-between">
+      <button class="flex items-center gap-3 text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-white/25 rounded-2xl transition-all" aria-label="Profil bisnis">
+        <div id="avatar-wrapper" class="w-11 h-11 rounded-full bg-white/20 p-[2px] group-active:scale-95 transition-transform duration-200 shadow-[0_8px_20px_rgba(0,0,0,0.20)] ring-1 ring-white/20">
+        </div>
+        <div>
+          <h2 id="business-name" class="text-[15px] font-bold tracking-tight text-white transition-colors duration-300"></h2>
+          <p id="case-number" class="text-[11px] font-medium mt-0.5 text-white/60 transition-colors duration-300"></p>
+        </div>
+      </button>
+      <button id="btn-share" class="w-8 h-8 rounded-full flex items-center justify-center active:scale-90 transition-all focus:outline-none focus-visible:ring-2 bg-white/10 hover:bg-white/20 active:bg-white/25 focus-visible:ring-white/30 border border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.15)]" aria-label="Bagikan link status">
+        <iconify-icon icon="solar:share-linear" class="text-lg text-white transition-colors duration-300"></iconify-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Gradient Hero + Wave -->
+  <div class="relative overflow-hidden -mt-[72px]">
     <!-- Gradient background -->
     <div class="absolute inset-0 bg-gradient-to-br from-[#0F3440] via-[#16465B] to-[#1E6F8A]"></div>
-    <!-- Subtle reactive glow accents -->
-    <div class="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] rounded-full blur-[100px] bg-[#2A9D8F]/20"></div>
-    <div class="absolute bottom-[10%] left-[-15%] w-[250px] h-[250px] rounded-full blur-[90px] bg-[#4ECDC4]/10"></div>
+    <!-- Duotone Accent Pop: warm amber glow contrasting cool teal -->
+    <div class="absolute top-[-10%] right-[-8%] w-[280px] h-[280px] rounded-full blur-[100px] bg-[#F4A261]/[0.12]"></div>
+    <!-- Cool accent for depth -->
+    <div class="absolute bottom-[5%] left-[-12%] w-[220px] h-[220px] rounded-full blur-[90px] bg-[#4ECDC4]/[0.08]"></div>
 
-    <!-- Header content -->
-    <div class="relative z-10 w-full max-w-[560px] mx-auto px-5 sm:px-6">
-      <!-- Top bar: avatar + share -->
-      <div class="py-4 flex items-center justify-between">
-        <button class="flex items-center gap-3 text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-white/25 rounded-2xl transition-all" aria-label="Profil bisnis">
-          <div id="avatar-wrapper" class="w-11 h-11 rounded-full bg-white/20 p-[2px] group-active:scale-95 transition-transform duration-200 shadow-[0_8px_20px_rgba(0,0,0,0.20)] ring-1 ring-white/20">
-          </div>
-          <div>
-            <h2 id="business-name" class="text-[15px] font-bold tracking-tight text-white"></h2>
-            <p id="case-number" class="text-[11px] font-medium mt-0.5 text-white/60"></p>
-          </div>
-        </button>
-        <button id="btn-share" class="w-8 h-8 rounded-full flex items-center justify-center active:scale-90 transition-all focus:outline-none focus-visible:ring-2 bg-white/10 hover:bg-white/20 active:bg-white/25 focus-visible:ring-white/30 border border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.15)]" aria-label="Bagikan link status">
-          <iconify-icon icon="solar:share-linear" class="text-lg text-white"></iconify-icon>
-        </button>
-      </div>
+    <!-- Hero content -->
+    <div class="relative z-10 max-w-[560px] mx-auto px-5 sm:px-6">
+      <!-- Spacer for sticky header -->
+      <div class="h-[72px]"></div>
 
       <!-- Hero section -->
-      <section class="pb-10 pt-2" aria-labelledby="journey-title">
+      <section class="pb-12 pt-3" aria-labelledby="journey-title">
         <p id="journey-complaint" class="text-[13px] text-white/60 font-medium mb-2"></p>
         <h1 id="journey-title" class="text-[26px] sm:text-[28px] font-extrabold text-white tracking-tight leading-[1.2] mb-3"></h1>
         <div class="flex items-center gap-2.5 flex-wrap">
@@ -112,10 +118,10 @@
       </section>
     </div>
 
-    <!-- Wave separator -->
+    <!-- Wave separator (subtle) -->
     <div class="absolute bottom-0 left-0 right-0">
-      <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto block" preserveAspectRatio="none">
-        <path d="M0 40C240 70 480 80 720 60C960 40 1200 20 1440 40V80H0V40Z" fill="white"/>
+      <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto block" preserveAspectRatio="none">
+        <path d="M0 30C360 55 720 60 1080 45C1260 37 1380 28 1440 24V60H0V30Z" fill="white"/>
       </svg>
     </div>
   </div>
@@ -649,6 +655,51 @@
     lightboxStage.addEventListener('dblclick', (e) => { if (!isOpen) return; if (isPointInsideCurrentPhoto(e.clientX, e.clientY)) toggleZoomAt(e.clientX, e.clientY); });
     window.addEventListener('resize', () => { if (isOpen) setTrackPosition(0, false); });
     document.addEventListener('keydown', (e) => { if (!isOpen) return; if (e.key === 'Escape') closeLightbox(); if (e.key === 'ArrowRight') goToPhoto(currentIndex+1); if (e.key === 'ArrowLeft') goToPhoto(currentIndex-1); });
+
+    // ─── STICKY HEADER SCROLL BEHAVIOR ─────────────────────────────────────
+    const stickyHeader = document.getElementById('sticky-header');
+    const headerBizName = document.getElementById('business-name');
+    const headerCaseNum = document.getElementById('case-number');
+    const headerShareIcon = document.querySelector('#btn-share iconify-icon');
+    const headerShareBtn = document.getElementById('btn-share');
+    const headerAvatar = document.getElementById('avatar-wrapper');
+    let headerScrolled = false;
+
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const threshold = 120; // roughly where wave ends
+
+      if (scrollY > threshold && !headerScrolled) {
+        headerScrolled = true;
+        stickyHeader.style.background = 'rgba(255,255,255,0.92)';
+        stickyHeader.style.backdropFilter = 'blur(20px)';
+        stickyHeader.style.borderBottom = '1px solid rgba(15,23,42,0.04)';
+        stickyHeader.style.boxShadow = '0 10px 34px rgba(15,23,42,0.045)';
+        headerBizName.style.color = '#0f172a';
+        headerCaseNum.style.color = '#64748b';
+        headerShareIcon.style.color = '#16465B';
+        headerShareBtn.style.background = 'rgba(255,255,255,0.86)';
+        headerShareBtn.style.borderColor = 'rgba(255,255,255,1)';
+        headerShareBtn.style.boxShadow = '0 8px 20px rgba(15,23,42,0.08)';
+        headerAvatar.style.background = 'white';
+        headerAvatar.style.boxShadow = '0 8px 20px rgba(15,23,42,0.10)';
+        headerAvatar.style.ringColor = 'rgba(15,23,42,0.06)';
+      } else if (scrollY <= threshold && headerScrolled) {
+        headerScrolled = false;
+        stickyHeader.style.background = 'transparent';
+        stickyHeader.style.backdropFilter = '';
+        stickyHeader.style.borderBottom = 'none';
+        stickyHeader.style.boxShadow = 'none';
+        headerBizName.style.color = 'white';
+        headerCaseNum.style.color = 'rgba(255,255,255,0.6)';
+        headerShareIcon.style.color = 'white';
+        headerShareBtn.style.background = 'rgba(255,255,255,0.1)';
+        headerShareBtn.style.borderColor = 'rgba(255,255,255,0.1)';
+        headerShareBtn.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+        headerAvatar.style.background = 'rgba(255,255,255,0.2)';
+        headerAvatar.style.boxShadow = '0 8px 20px rgba(0,0,0,0.20)';
+      }
+    });
 
     // ─── INIT ────────────────────────────────────────────────────────────────
     renderPage();
