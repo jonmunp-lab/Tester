@@ -48,7 +48,7 @@
 
     .rail-line-done {
       width: 1.5px;
-      background: rgba(22, 70, 91, 0.15);
+      background: rgba(22, 70, 91, 0.30);
     }
 
     .rail-line-active {
@@ -344,11 +344,11 @@
         leftCol.setAttribute('aria-hidden', 'true');
 
         if (step.status === 'done') {
-          leftCol.innerHTML = `<iconify-icon icon="solar:check-circle-bold" class="relative z-10 text-[21px] text-[#16465B]/30"></iconify-icon>${!isLast ? `<div class="absolute top-[21px] -bottom-7 ${lineClass}"></div>` : ''}`;
+          leftCol.innerHTML = `<iconify-icon icon="solar:check-circle-bold" class="relative z-10 text-[21px] text-[#16465B]/30"></iconify-icon>${!isLast ? `<div class="absolute top-[19px] -bottom-7 left-1/2 -translate-x-1/2 ${lineClass}"></div>` : ''}`;
         } else if (step.status === 'current') {
-          leftCol.innerHTML = `<div class="relative z-10 w-[20px] h-[20px] min-w-[20px] min-h-[20px] shrink-0 mt-0.5 rounded-full bg-[#16465B] border-[3px] border-white shadow-[0_0_0_4px_rgba(22,70,91,0.12)]"></div>${!isLast ? `<div class="absolute top-[24px] -bottom-7 ${lineClass}"></div>` : ''}`;
+          leftCol.innerHTML = `<div class="relative z-10 w-[20px] h-[20px] min-w-[20px] min-h-[20px] shrink-0 mt-0.5 rounded-full bg-[#16465B] border-[3px] border-white shadow-[0_0_0_4px_rgba(22,70,91,0.12)]"></div>${!isLast ? `<div class="absolute top-[22px] -bottom-7 left-1/2 -translate-x-1/2 ${lineClass}"></div>` : ''}`;
         } else {
-          leftCol.innerHTML = `<div class="relative z-10 w-[20px] h-[20px] min-w-[20px] min-h-[20px] shrink-0 mt-0.5 rounded-full border-2 border-slate-200 bg-white"></div>${!isLast ? `<div class="absolute top-[24px] -bottom-7 ${lineClass}"></div>` : ''}`;
+          leftCol.innerHTML = `<div class="relative z-10 w-[20px] h-[20px] min-w-[20px] min-h-[20px] shrink-0 mt-0.5 rounded-full border-2 border-slate-200 bg-white"></div>${!isLast ? `<div class="absolute top-[22px] -bottom-7 left-1/2 -translate-x-1/2 ${lineClass}"></div>` : ''}`;
         }
         node.appendChild(leftCol);
 
