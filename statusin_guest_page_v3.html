@@ -73,52 +73,57 @@
 
 <body class="min-h-screen bg-white px-4 sm:px-6 pt-0 pb-4 overflow-x-hidden">
 
-  <!-- Subtle ambient background -->
-  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-    <div class="absolute -top-40 -left-32 w-[560px] h-[560px] rounded-full blur-[140px] bg-[#F6F1EA]/70"></div>
-    <div class="absolute -bottom-44 -right-28 w-[620px] h-[620px] rounded-full blur-[150px] bg-[#FF5A5F]/7"></div>
-    <div class="absolute top-[32%] left-[52%] -translate-x-1/2 w-[420px] h-[420px] rounded-full blur-[130px] bg-[#16465B]/4"></div>
-  </div>
+  <!-- Gradient Header + Wave -->
+  <div class="relative overflow-hidden">
+    <!-- Gradient background -->
+    <div class="absolute inset-0 bg-gradient-to-br from-[#0F3440] via-[#16465B] to-[#1E6F8A]"></div>
+    <!-- Subtle reactive glow accents -->
+    <div class="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] rounded-full blur-[100px] bg-[#2A9D8F]/20"></div>
+    <div class="absolute bottom-[10%] left-[-15%] w-[250px] h-[250px] rounded-full blur-[90px] bg-[#4ECDC4]/10"></div>
 
-  <!-- Guest Status Link View -->
-  <main class="relative z-10 w-full max-w-[560px] mx-auto">
-    <div class="isolate flex flex-col w-full mx-auto relative bg-transparent text-slate-950">
-
-      <!-- Sticky Header -->
-      <div class="sticky top-0 z-50 -mx-4 sm:-mx-6 px-5 sm:px-6 py-4 flex items-center justify-between bg-white/78 backdrop-blur-2xl border-b border-slate-950/[0.04] shadow-[0_10px_34px_rgba(15,23,42,0.045)]">
-        <button class="flex items-center gap-3 text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16465B]/25 rounded-2xl transition-all" aria-label="Profil bisnis">
-          <div id="avatar-wrapper" class="w-12 h-12 rounded-full bg-white p-[2px] group-active:scale-95 transition-transform duration-200 shadow-[0_12px_30px_rgba(15,23,42,0.12)] ring-1 ring-slate-950/[0.06]">
+    <!-- Header content -->
+    <div class="relative z-10 w-full max-w-[560px] mx-auto px-5 sm:px-6">
+      <!-- Top bar: avatar + share -->
+      <div class="py-4 flex items-center justify-between">
+        <button class="flex items-center gap-3 text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-white/25 rounded-2xl transition-all" aria-label="Profil bisnis">
+          <div id="avatar-wrapper" class="w-11 h-11 rounded-full bg-white/20 p-[2px] group-active:scale-95 transition-transform duration-200 shadow-[0_8px_20px_rgba(0,0,0,0.20)] ring-1 ring-white/20">
           </div>
           <div>
-            <h2 id="business-name" class="text-base font-bold tracking-tight text-slate-950 group-hover:text-slate-700 transition-colors"></h2>
-            <p id="case-number" class="text-xs font-medium mt-0.5 text-slate-500 group-hover:text-[#16465B] transition-colors"></p>
+            <h2 id="business-name" class="text-[15px] font-bold tracking-tight text-white"></h2>
+            <p id="case-number" class="text-[11px] font-medium mt-0.5 text-white/60"></p>
           </div>
         </button>
-        <button id="btn-share" class="w-8 h-8 rounded-full flex items-center justify-center active:scale-90 transition-all focus:outline-none focus-visible:ring-2 bg-white/86 hover:bg-white active:bg-slate-100 focus-visible:ring-[#16465B]/20 border border-white shadow-[0_8px_20px_rgba(15,23,42,0.08)] ring-1 ring-slate-950/[0.04]" aria-label="Bagikan link status">
-          <iconify-icon icon="solar:share-linear" class="text-lg text-[#16465B]"></iconify-icon>
+        <button id="btn-share" class="w-8 h-8 rounded-full flex items-center justify-center active:scale-90 transition-all focus:outline-none focus-visible:ring-2 bg-white/10 hover:bg-white/20 active:bg-white/25 focus-visible:ring-white/30 border border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.15)]" aria-label="Bagikan link status">
+          <iconify-icon icon="solar:share-linear" class="text-lg text-white"></iconify-icon>
         </button>
       </div>
 
-      <!-- Main Content -->
-      <div class="relative z-20 px-1 sm:px-0 pt-6 pb-10">
+      <!-- Hero section -->
+      <section class="pb-10 pt-2" aria-labelledby="journey-title">
+        <p id="journey-complaint" class="text-[13px] text-white/60 font-medium mb-2"></p>
+        <h1 id="journey-title" class="text-[26px] sm:text-[28px] font-extrabold text-white tracking-tight leading-[1.2] mb-3"></h1>
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <span id="hero-badge" class="inline-flex items-center gap-1.5 text-[12px] font-bold text-white bg-white/[0.14] px-3 py-1.5 rounded-full backdrop-blur-sm">
+            <iconify-icon icon="solar:user-check-rounded-bold" class="text-sm"></iconify-icon>
+            <span id="hero-badge-text"></span>
+          </span>
+          <span id="hero-freshness" class="text-[12px] font-medium text-white/50"></span>
+        </div>
+      </section>
+    </div>
 
-        <!-- ═══ HERO SECTION ═══ Commanding first impression -->
-        <section class="mb-6" aria-labelledby="journey-title">
-          <!-- Eyebrow: case info -->
-          <p id="journey-complaint" class="text-[13px] text-slate-500 font-medium mb-1"></p>
+    <!-- Wave separator -->
+    <div class="absolute bottom-0 left-0 right-0">
+      <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto block" preserveAspectRatio="none">
+        <path d="M0 40C240 70 480 80 720 60C960 40 1200 20 1440 40V80H0V40Z" fill="white"/>
+      </svg>
+    </div>
+  </div>
 
-          <!-- Big status title — the most important thing on the page -->
-          <h1 id="journey-title" class="text-[26px] sm:text-[28px] font-extrabold text-slate-950 tracking-tight leading-[1.2] mb-3"></h1>
-
-          <!-- Inline badge: responsibility + freshness — answers 2 questions in 1 line -->
-          <div class="flex items-center gap-2 flex-wrap">
-            <span id="hero-badge" class="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#16465B] bg-[#16465B]/[0.10] px-3 py-1.5 rounded-full">
-              <iconify-icon icon="solar:user-check-rounded-bold" class="text-sm"></iconify-icon>
-              <span id="hero-badge-text"></span>
-            </span>
-            <span id="hero-freshness" class="text-[12px] font-medium text-slate-400"></span>
-          </div>
-        </section>
+  <!-- Main content area (white) -->
+  <main class="relative z-10 w-full max-w-[560px] mx-auto px-4 sm:px-6">
+    <div class="isolate flex flex-col w-full mx-auto relative bg-transparent text-slate-950">
+      <div class="relative z-20 px-1 sm:px-0 pt-2 pb-10">
 
         <!-- ═══ CERTAINTY SUMMARY ═══ Single container -->
         <section class="mb-6 bg-white/86 backdrop-blur-2xl border border-white rounded-[1.75rem] p-5 shadow-[0_18px_54px_rgba(15,23,42,0.08)] ring-1 ring-slate-950/[0.045]" aria-label="Ringkasan status">
