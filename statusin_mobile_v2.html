@@ -99,7 +99,6 @@ body {
   background: rgba(234,242,246,0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(22,70,91,0.04);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -771,7 +770,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Header wrap background blend
     const wrapBgAlpha = lerp(0.85, 0.92, eased);
     headerWrap.style.background = 'rgba(234,242,246,' + wrapBgAlpha.toFixed(3) + ')';
-    headerWrap.style.borderBottomColor = 'rgba(22,70,91,' + lerp(0.04, 0.06, eased).toFixed(3) + ')';
     headerWrap.style.boxShadow = '0 ' + lerp(0, 8).toFixed(0) + 'px ' + lerp(0, 30).toFixed(0) + 'px rgba(22,70,91,' + lerp(0, 0.08, eased).toFixed(3) + ')';
 
     // Capsule (no longer styled separately — content only)
