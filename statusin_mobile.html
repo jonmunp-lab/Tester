@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Statusin - Pemeriksaan Awal</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -69,7 +69,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 30;
-  padding: 54px 20px 12px;
+  padding: 16px 20px 12px;
   transition: padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -111,7 +111,7 @@ body {
 
 /* Header scrolled state */
 .header-wrap.scrolled {
-  padding: 54px 20px 8px;
+  padding: 10px 20px 8px;
 }
 .header-wrap.scrolled .header-capsule {
   background: rgba(255,255,255,0.88);
@@ -298,23 +298,23 @@ body {
 }
 .seg-btn {
   flex: 1;
-  padding: 7px 0;
-  font-size: 12px;
+  padding: 6px 0;
+  font-size: 11px;
   font-weight: 600;
   border-radius: 999px;
   border: none;
   cursor: pointer;
   transition: all 0.25s ease;
   background: transparent;
-  color: #6b7280;
+  color: rgba(107,114,128,0.85);
 }
 .seg-btn:hover {
   color: #374151;
 }
 .seg-btn.active {
-  background: #16465B;
+  background: rgba(22,70,91,0.88);
   color: #ffffff;
-  box-shadow: 0 2px 8px rgba(22,70,91,0.2);
+  box-shadow: 0 1px 4px rgba(22,70,91,0.15);
 }
 
 /* ===== DETAIL CARD ===== */
@@ -322,7 +322,7 @@ body {
   background: rgba(255,255,255,0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.85);
+  border: 1px solid rgba(229,231,235,0.7);
   border-radius: 24px;
   padding: 20px;
   box-shadow: 0 10px 35px rgba(22,70,91,0.07);
@@ -418,15 +418,15 @@ body {
 /* Photo attachment - part of note */
 .photo-attachment {
   display: flex;
-  gap: 12px;
-  margin-top: 12px;
+  gap: 10px;
+  margin-top: 14px;
   margin-left: 36px;
 }
 .photo-thumb {
-  width: 56px;
+  width: 80px;
   height: 56px;
   border-radius: 14px;
-  background: linear-gradient(135deg, rgba(22,70,91,0.03), #ffffff);
+  background: #f3f4f6;
   border: 1px solid rgba(229,231,235,0.5);
   box-shadow: 0 3px 10px rgba(0,0,0,0.04);
   display: flex;
@@ -439,7 +439,6 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 14px;
 }
 
 /* Tab panels */
@@ -482,7 +481,7 @@ body {
 /* ===== FLOATING CTA ===== */
 .floating-cta {
   position: absolute;
-  bottom: 24px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 8px));
   left: 20px;
   right: 20px;
   z-index: 40;
@@ -653,10 +652,10 @@ body {
         <!-- Photo attachment: part of the note message -->
         <div class="photo-attachment">
           <div class="photo-thumb">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+            <img src="https://picsum.photos/seed/repair1/160/112" alt="Foto pemeriksaan 1">
           </div>
           <div class="photo-thumb">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+            <img src="https://picsum.photos/seed/repair2/160/112" alt="Foto pemeriksaan 2">
           </div>
         </div>
       </div>
