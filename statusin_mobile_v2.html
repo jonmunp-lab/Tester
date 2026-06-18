@@ -96,9 +96,7 @@ body {
   margin-right: -20px;
   padding-left: 40px;
   padding-right: 40px;
-  background: rgba(234,242,246,0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: transparent;
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -767,9 +765,11 @@ document.addEventListener('DOMContentLoaded', () => {
     headerWrap.style.paddingTop = padVert + 'px';
     headerWrap.style.paddingBottom = padVert + 'px';
 
-    // Header wrap background blend
-    const wrapBgAlpha = lerp(0.85, 0.92, eased);
+    // Header wrap background — transparent at top, frosted on scroll
+    const wrapBgAlpha = lerp(0, 0.88, eased);
     headerWrap.style.background = 'rgba(234,242,246,' + wrapBgAlpha.toFixed(3) + ')';
+    headerWrap.style.backdropFilter = eased > 0.1 ? 'blur(20px)' : 'none';
+    headerWrap.style.webkitBackdropFilter = eased > 0.1 ? 'blur(20px)' : 'none';
     headerWrap.style.boxShadow = '0 ' + lerp(0, 8).toFixed(0) + 'px ' + lerp(0, 30).toFixed(0) + 'px rgba(22,70,91,' + lerp(0, 0.08, eased).toFixed(3) + ')';
 
     // Capsule (no longer styled separately — content only)
