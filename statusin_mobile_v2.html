@@ -91,20 +91,22 @@ body {
   position: sticky;
   top: 0;
   z-index: 30;
-  padding: 16px 20px 12px;
-  padding-top: calc(16px + env(safe-area-inset-top, 0px));
-  background: linear-gradient(to bottom, #EAF2F6 0%, rgba(234,242,246,0.85) 60%, rgba(234,242,246,0) 100%);
-  transition: padding 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.35s ease;
+  padding: 12px 20px;
+  padding-top: calc(12px + env(safe-area-inset-top, 0px));
+  margin-left: -20px;
+  margin-right: -20px;
+  padding-left: 40px;
+  padding-right: 40px;
+  background: rgba(234,242,246,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(22,70,91,0.04);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .header-capsule {
-  background: rgba(255,255,255,0.72);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
-  border: 1px solid rgba(255,255,255,0.7);
-  box-shadow: 0 12px 40px rgba(22,70,91,0.10);
-  border-radius: 20px;
-  padding: 14px 16px;
+  background: transparent;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -763,26 +765,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const eased = 1 - Math.pow(1 - progress, 3);
 
     // Header wrap padding
-    const padBottom = lerp(12, 8, eased);
-    headerWrap.style.paddingBottom = padBottom + 'px';
+    const padVert = lerp(12, 8, eased);
+    headerWrap.style.paddingTop = 'calc(' + padVert + 'px + env(safe-area-inset-top, 0px))';
+    headerWrap.style.paddingBottom = padVert + 'px';
 
     // Header wrap background blend
-    const wrapBgAlpha = lerp(0.85, 0, eased);
-    const wrapGlassAlpha = lerp(0, 0.7, eased);
-    if (progress < 0.5) {
-      headerWrap.style.background = 'linear-gradient(to bottom, rgba(234,242,246,' + lerp(1, 0.5, eased).toFixed(3) + ') 0%, rgba(234,242,246,' + wrapBgAlpha.toFixed(3) + ') 60%, rgba(234,242,246,0) 100%)';
-    } else {
-      headerWrap.style.background = 'rgba(255,255,255,' + wrapGlassAlpha.toFixed(3) + ')';
-    }
+    const wrapBgAlpha = lerp(0.85, 0.92, eased);
+    headerWrap.style.background = 'rgba(234,242,246,' + wrapBgAlpha.toFixed(3) + ')';
+    headerWrap.style.borderBottomColor = 'rgba(22,70,91,' + lerp(0.04, 0.06, eased).toFixed(3) + ')';
+    headerWrap.style.boxShadow = '0 ' + lerp(0, 8).toFixed(0) + 'px ' + lerp(0, 30).toFixed(0) + 'px rgba(22,70,91,' + lerp(0, 0.08, eased).toFixed(3) + ')';
 
-    // Capsule
-    const capsulePad = lerp(14, 10, eased);
-    const capsuleRadius = lerp(20, 16, eased);
-    const capsuleBgAlpha = lerp(0.72, 0.88, eased);
-    headerCapsule.style.padding = capsulePad + 'px ' + lerp(16, 14, eased) + 'px';
-    headerCapsule.style.borderRadius = capsuleRadius + 'px';
-    headerCapsule.style.backgroundColor = 'rgba(255,255,255,' + capsuleBgAlpha.toFixed(3) + ')';
-
+    // Capsule (no longer styled separately — content only)
     // Logo
     const logoSize = lerp(32, 0, eased);
     const logoOpacity = lerp(1, 0, eased);
