@@ -134,37 +134,14 @@ body {
   fill: var(--merchant-brand);
 }
 
-/* Header scrolled state */
-.header-wrap.scrolled {
-  padding: 10px 20px 8px;
-}
-.header-wrap.scrolled .header-capsule {
-  background: rgba(255,255,255,0.88);
-  border-radius: 16px;
-  padding: 10px 14px;
-  box-shadow: 0 8px 30px rgba(22,70,91,0.12);
-}
-.header-wrap.scrolled .biz-logo {
-  width: 0;
-  height: 0;
-  opacity: 0;
-  margin: 0;
-  overflow: hidden;
-}
-.header-wrap.scrolled .header-left {
-  gap: 0;
-}
-.header-wrap.scrolled .header-title {
-  font-size: 12px;
-}
-.header-wrap.scrolled .header-sub {
-  font-size: 10px;
-}
-.header-wrap.scrolled .header-sub-default {
+/* Header scrolled state - handled by JS continuous interpolation */
+.header-sub-scrolled {
   display: none;
+  opacity: 0;
+  transition: opacity 0.1s ease;
 }
-.header-wrap.scrolled .header-sub-scrolled {
-  display: block;
+.header-sub-default {
+  transition: opacity 0.1s ease;
 }
 
 .header-info { min-width: 0; }
@@ -183,9 +160,6 @@ body {
 .header-sub span {
   color: #9ca3af;
   margin: 0 4px;
-}
-.header-sub-scrolled {
-  display: none;
 }
 
 .share-btn {
@@ -285,9 +259,7 @@ body {
 }
 .hero-next-label {
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+  font-weight: 500;
   color: #6b7280;
 }
 .hero-next-value {
@@ -344,13 +316,13 @@ body {
 
 /* ===== DETAIL CARD ===== */
 .detail-card {
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(229,231,235,0.7);
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.6);
   border-radius: 24px;
   padding: 20px;
-  box-shadow: 0 10px 35px rgba(22,70,91,0.07);
+  box-shadow: 0 10px 35px rgba(22,70,91,0.09);
   margin-top: 12px;
 }
 
@@ -622,7 +594,7 @@ body {
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
           Ditangani oleh Tim Layanan
         </span>
-        <span class="hero-freshness">12 mnt lalu</span>
+        <span class="hero-freshness">Update 12 mnt lalu</span>
       </div>
       <div class="hero-next">
         <div class="hero-next-top">
@@ -764,15 +736,67 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Header scroll transform - smooth morphing
+  // Header scroll transform - continuous interpolation (2026+)
   const mainContent = document.getElementById('mainContent');
   const headerWrap = document.getElementById('headerWrap');
+  const headerCapsule = headerWrap.querySelector('.header-capsule');
+  const bizLogo = headerWrap.querySelector('.biz-logo');
+  const headerTitle = headerWrap.querySelector('.header-title');
+  const subDefault = headerWrap.querySelector('.header-sub-default');
+  const subScrolled = headerWrap.querySelector('.header-sub-scrolled');
+
+  const SCROLL_START = 0;
+  const SCROLL_END = 60;
+
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
+  function clamp(val, min, max) {
+    return Math.min(Math.max(val, min), max);
+  }
 
   mainContent.addEventListener('scroll', () => {
-    if (mainContent.scrollTop > 12) {
-      headerWrap.classList.add('scrolled');
+    const scrollY = mainContent.scrollTop;
+    const progress = clamp((scrollY - SCROLL_START) / (SCROLL_END - SCROLL_START), 0, 1);
+    // Ease-out curve for smoother feel
+    const eased = 1 - Math.pow(1 - progress, 3);
+
+    // Header wrap padding
+    const padBottom = lerp(12, 8, eased);
+    headerWrap.style.paddingBottom = padBottom + 'px';
+
+    // Capsule
+    const capsulePad = lerp(14, 10, eased);
+    const capsuleRadius = lerp(20, 16, eased);
+    const capsuleBgAlpha = lerp(0.72, 0.88, eased);
+    headerCapsule.style.padding = capsulePad + 'px ' + lerp(16, 14, eased) + 'px';
+    headerCapsule.style.borderRadius = capsuleRadius + 'px';
+    headerCapsule.style.backgroundColor = 'rgba(255,255,255,' + capsuleBgAlpha.toFixed(3) + ')';
+
+    // Logo
+    const logoSize = lerp(32, 0, eased);
+    const logoOpacity = lerp(1, 0, eased);
+    bizLogo.style.width = logoSize + 'px';
+    bizLogo.style.height = logoSize + 'px';
+    bizLogo.style.opacity = logoOpacity;
+    bizLogo.style.marginRight = lerp(0, -10, eased) + 'px';
+
+    // Title font-size
+    const titleSize = lerp(13, 12, eased);
+    headerTitle.style.fontSize = titleSize + 'px';
+
+    // Sub text swap
+    if (progress > 0.5) {
+      subDefault.style.opacity = '0';
+      subDefault.style.position = 'absolute';
+      subScrolled.style.display = 'block';
+      subScrolled.style.opacity = String(clamp((progress - 0.5) * 2, 0, 1));
     } else {
-      headerWrap.classList.remove('scrolled');
+      subDefault.style.opacity = String(1 - progress * 2);
+      subDefault.style.position = 'relative';
+      subScrolled.style.display = 'none';
+      subScrolled.style.opacity = '0';
     }
   });
 });
