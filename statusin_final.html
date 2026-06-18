@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statusin - Pemeriksaan Awal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f3f4f6;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  -webkit-font-smoothing: antialiased;
+}
+
+.phone-frame {
+  position: relative;
+  width: 375px;
+  height: 812px;
+  background: linear-gradient(to bottom, #EAF2F6, #ffffff 40%, #F7FAFB);
+  border-radius: 40px;
+  border: 8px solid #111827;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+}
+
+/* Ambient Layer */
+.ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.ambient::before {
+  content: '';
+  position: absolute;
+  top: -96px;
+  left: -80px;
+  width: 256px;
+  height: 256px;
+  border-radius: 50%;
+  background: rgba(22,70,91,0.035);
+  filter: blur(48px);
+}
+.ambient::after {
+  content: '';
+  position: absolute;
+  top: 128px;
+  right: -96px;
+  width: 288px;
+  height: 288px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.58);
+  filter: blur(48px);
+}
+
+/* Scrollbar hide */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ===== HEADER ===== */
+.header-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 40px 20px 12px;
+  transition: padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header-capsule {
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255,255,255,0.7);
+  box-shadow: 0 12px 40px rgba(22,70,91,0.10);
+  border-radius: 20px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* Business logo */
+.biz-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.biz-logo svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Header scrolled state */
+.header-wrap.scrolled {
+  padding: 40px 20px 8px;
+}
+.header-wrap.scrolled .header-capsule {
+  background: rgba(255,255,255,0.88);
+  border-radius: 16px;
+  padding: 10px 14px;
+  box-shadow: 0 8px 30px rgba(22,70,91,0.12);
+}
+.header-wrap.scrolled .biz-logo {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  margin: 0;
+  overflow: hidden;
+}
+.header-wrap.scrolled .header-left {
+  gap: 0;
+}
+.header-wrap.scrolled .header-title {
+  font-size: 12px;
+}
+.header-wrap.scrolled .header-sub {
+  font-size: 10px;
+}
+.header-wrap.scrolled .header-sub-default {
+  display: none;
+}
+.header-wrap.scrolled .header-sub-scrolled {
+  display: block;
+}
+
+.header-info { min-width: 0; }
+.header-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  transition: font-size 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.header-sub {
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 2px;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.header-sub span {
+  color: #9ca3af;
+  margin: 0 4px;
+}
+.header-sub-scrolled {
+  display: none;
+}
+
+.share-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #374151;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+.share-btn:hover {
+  background: rgba(255,255,255,0.9);
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px;
+  padding-bottom: 200px;
+  position: relative;
+  z-index: 10;
+}
+
+/* ===== HERO ===== */
+.hero-section {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.hero-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+}
+.hero-title {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: #16465B;
+  margin-top: 6px;
+  line-height: 1.1;
+}
+.hero-summary {
+  font-size: 14px;
+  color: #4b5563;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.7);
+  font-size: 12px;
+  color: #4b5563;
+}
+.hero-badge svg { color: #6b7280; }
+.hero-freshness {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* Hero Update - Tinted surface */
+.hero-next {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(22,70,91,0.05);
+  border: 1px solid rgba(22,70,91,0.06);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hero-next-icon {
+  color: #16465B;
+  flex-shrink: 0;
+}
+.hero-next-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+}
+.hero-next-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: #111827;
+  margin-left: 4px;
+}
+
+/* ===== PROGRESS SECTION ===== */
+.progress-section {
+  margin-bottom: 16px;
+}
+.progress-title {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #111827;
+  margin-bottom: 10px;
+}
+
+/* Segmented Control - rounded pill */
+.segmented-control {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.7);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  padding: 4px;
+  border-radius: 999px;
+  display: flex;
+}
+.seg-btn {
+  flex: 1;
+  padding: 6px 0;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background: transparent;
+  color: rgba(107,114,128,0.85);
+}
+.seg-btn:hover {
+  color: #374151;
+}
+.seg-btn.active {
+  background: rgba(22,70,91,0.88);
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgba(22,70,91,0.15);
+}
+
+/* ===== DETAIL CARD ===== */
+.detail-card {
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 10px 35px rgba(22,70,91,0.09);
+  margin-top: 12px;
+}
+
+.detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(229,231,235,0.5);
+}
+.detail-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+.detail-sub {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+.detail-time-badge {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(17,24,39,0.04);
+  color: #6b7280;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ===== NOTE AUTHOR SYSTEM ===== */
+.note-author {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.note-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(76, 118, 134, 0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+/* Generic state - icon */
+.note-avatar-generic svg {
+  width: 13px;
+  height: 13px;
+  color: #4C7686;
+  stroke-width: 1.5;
+}
+/* Personal state - initials */
+.note-avatar-personal {
+  font-size: 11px;
+  font-weight: 600;
+  color: #4C7686;
+}
+.note-content {
+  flex: 1;
+  min-width: 0;
+}
+.note-author-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.note-author-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+}
+.note-author-detail {
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 1px;
+}
+.note-time-badge {
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(17,24,39,0.04);
+  color: #6b7280;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.note-text {
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.6;
+  margin-top: 6px;
+}
+.note-text-secondary {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin-top: 4px;
+}
+
+/* Photo attachment - part of note */
+.photo-attachment {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  margin-left: 36px;
+}
+.photo-thumb {
+  width: 80px;
+  height: 56px;
+  border-radius: 14px;
+  background: #f3f4f6;
+  border: 1px solid rgba(229,231,235,0.5);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.photo-thumb svg { color: #9ca3af; }
+.photo-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Tab panels */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Locked state card */
+.locked-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 36px 24px;
+}
+.locked-icon {
+  margin-bottom: 14px;
+}
+.locked-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+}
+.locked-desc {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.5;
+  max-width: 220px;
+}
+
+/* ===== FOOTER BRAND ===== */
+.footer-brand {
+  text-align: center;
+  font-size: 11px;
+  color: #9ca3af;
+  padding: 32px 0 24px;
+}
+
+/* ===== FLOATING CTA ===== */
+.floating-cta {
+  position: absolute;
+  bottom: 24px;
+  left: 20px;
+  right: 20px;
+  z-index: 40;
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255,255,255,0.7);
+  box-shadow: 0 16px 45px rgba(22,70,91,0.14);
+  border-radius: 28px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cta-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 10px;
+}
+.cta-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #16465B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+.cta-text-primary {
+  font-size: 12px;
+  font-weight: 600;
+  color: #111827;
+}
+.cta-text-secondary {
+  font-size: 10px;
+  color: #6b7280;
+  margin-top: 1px;
+}
+.cta-button {
+  background: rgba(22,70,91,0.08);
+  color: #16465B;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+.cta-button:hover {
+  background: rgba(22,70,91,0.13);
+}
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <!-- Ambient Layer -->
+  <div class="ambient"></div>
+
+  <!-- Sticky Header -->
+  <div class="header-wrap" id="headerWrap">
+    <div class="header-capsule">
+      <div class="header-left">
+        <!-- Business Logo: rounded square, hidden on scroll -->
+        <div class="biz-logo">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="8" fill="#374151"/>
+            <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#ffffff">iR</text>
+          </svg>
+        </div>
+        <div class="header-info">
+          <div class="header-title">iRepair Jakarta</div>
+          <div class="header-sub header-sub-default">SRV-009803<span>&middot;</span>Budi</div>
+          <div class="header-sub header-sub-scrolled">Pemeriksaan Awal<span>&middot;</span>SRV-009803<span>&middot;</span>Budi</div>
+        </div>
+      </div>
+      <button class="share-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v13"/><path d="m16 6-4-4-4 4"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="main-content no-scrollbar" id="mainContent">
+
+    <!-- Compact Certainty Hero -->
+    <section class="hero-section">
+      <p class="hero-label">Service iPhone 11</p>
+      <h1 class="hero-title">Pemeriksaan Awal</h1>
+      <p class="hero-summary">Tim layanan sedang memeriksa layanan Anda.</p>
+      <div class="hero-meta">
+        <span class="hero-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+          Ditangani oleh Tim Layanan
+        </span>
+        <span class="hero-freshness">Update 12 mnt lalu</span>
+      </div>
+      <div class="hero-next">
+        <svg class="hero-next-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span class="hero-next-label">Update berikutnya:</span>
+        <span class="hero-next-value">Jumat, 5 Juni &middot; 17.00 WIB</span>
+      </div>
+    </section>
+
+    <!-- Progress Layanan -->
+    <section class="progress-section">
+      <h2 class="progress-title">Progress Layanan</h2>
+      <div class="segmented-control">
+        <button class="seg-btn" data-tab="tab-prev">Diterima</button>
+        <button class="seg-btn active" data-tab="tab-curr">Pemeriksaan</button>
+        <button class="seg-btn" data-tab="tab-next">Persetujuan</button>
+      </div>
+    </section>
+
+    <!-- Detail Tahap: Diterima -->
+    <div class="tab-panel" id="tab-prev">
+      <div class="detail-card">
+        <div class="detail-header">
+          <div>
+            <div class="detail-title">Layanan Diterima</div>
+            <div class="detail-sub">Hari ini, 09.12</div>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16465B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+
+        <!-- Note: Generic state (no personal name) -->
+        <div class="note-author">
+          <div class="note-avatar note-avatar-generic">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+          </div>
+          <div class="note-content">
+            <div class="note-author-line">
+              <p class="note-author-name">Tim Layanan</p>
+              <span class="note-time-badge">Hari ini</span>
+            </div>
+            <p class="note-text">Layanan Anda sudah diterima dan dicatat oleh tim layanan.</p>
+            <p class="note-text-secondary">Catatan awal: Mati total, layar retak.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail Tahap: Pemeriksaan (Active) -->
+    <div class="tab-panel active" id="tab-curr">
+      <div class="detail-card">
+        <div class="detail-header">
+          <div>
+            <div class="detail-title">Pemeriksaan Awal</div>
+            <div class="detail-sub">Dimulai hari ini, 10.45</div>
+          </div>
+        </div>
+
+        <!-- Note: Personal state (with name + role) -->
+        <div class="note-author">
+          <div class="note-avatar note-avatar-personal">A</div>
+          <div class="note-content">
+            <div class="note-author-line">
+              <p class="note-author-name">Tim Layanan</p>
+              <span class="note-time-badge">12 mnt lalu</span>
+            </div>
+            <p class="note-author-detail">Anton, Teknisi</p>
+            <p class="note-text">Kami sedang mengecek kondisi awal dan akan memberi update berikutnya setelah pemeriksaan selesai.</p>
+          </div>
+        </div>
+
+        <!-- Photo attachment: part of the note message -->
+        <div class="photo-attachment">
+          <div class="photo-thumb">
+            <img src="https://picsum.photos/seed/repair1/160/112" alt="Foto pemeriksaan 1">
+          </div>
+          <div class="photo-thumb">
+            <img src="https://picsum.photos/seed/repair2/160/112" alt="Foto pemeriksaan 2">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail Tahap: Persetujuan (Locked State) -->
+    <div class="tab-panel" id="tab-next">
+      <div class="detail-card locked-card">
+        <div class="locked-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <p class="locked-title">Persetujuan Biaya</p>
+        <p class="locked-desc">Estimasi biaya akan muncul setelah pemeriksaan selesai.</p>
+      </div>
+    </div>
+
+    <!-- Footer Brand -->
+    <div class="footer-brand">
+      Statusin &mdash; Kepastian untuk setiap layanan.
+    </div>
+
+  </main>
+
+  <!-- Floating CTA Capsule -->
+  <div class="floating-cta">
+    <div class="cta-left">
+      <div class="cta-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>
+      </div>
+      <div>
+        <div class="cta-text-primary">Butuh Bantuan?</div>
+        <div class="cta-text-secondary">Chat dengan admin</div>
+      </div>
+    </div>
+    <button class="cta-button">Tanya</button>
+  </div>
+</div>
+
+<script>
+// Tab switching
+document.addEventListener('DOMContentLoaded', () => {
+  const buttons = document.querySelectorAll('.seg-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-tab');
+
+      // Update buttons
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Update panels
+      panels.forEach(p => {
+        if (p.id === target) {
+          p.classList.add('active');
+        } else {
+          p.classList.remove('active');
+        }
+      });
+
+      // Reset scroll to top so header returns to default state
+      document.getElementById('mainContent').scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // Header scroll transform - smooth morphing
+  const mainContent = document.getElementById('mainContent');
+  const headerWrap = document.getElementById('headerWrap');
+
+  mainContent.addEventListener('scroll', () => {
+    if (mainContent.scrollTop > 12) {
+      headerWrap.classList.add('scrolled');
+    } else {
+      headerWrap.classList.remove('scrolled');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
