@@ -92,7 +92,6 @@ body {
   top: 0;
   z-index: 30;
   padding: 12px 20px;
-  padding-top: calc(12px + env(safe-area-inset-top, 0px));
   margin-left: -20px;
   margin-right: -20px;
   padding-left: 40px;
@@ -766,7 +765,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Header wrap padding
     const padVert = lerp(12, 8, eased);
-    headerWrap.style.paddingTop = 'calc(' + padVert + 'px + env(safe-area-inset-top, 0px))';
+    headerWrap.style.paddingTop = padVert + 'px';
     headerWrap.style.paddingBottom = padVert + 'px';
 
     // Header wrap background blend
