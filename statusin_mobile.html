@@ -744,7 +744,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const subScrolled = headerWrap.querySelector('.header-sub-scrolled');
 
   const SCROLL_START = 0;
-  const SCROLL_END = 60;
+  const SCROLL_END = 30;
 
   function lerp(a, b, t) {
     return a + (b - a) * t;
@@ -784,14 +784,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const titleSize = lerp(13, 12, eased);
     headerTitle.style.fontSize = titleSize + 'px';
 
-    // Sub text swap
-    if (progress > 0.5) {
+    // Sub text swap - earlier at 30%
+    if (progress > 0.3) {
       subDefault.style.opacity = '0';
       subDefault.style.position = 'absolute';
       subScrolled.style.display = 'block';
-      subScrolled.style.opacity = String(clamp((progress - 0.5) * 2, 0, 1));
+      subScrolled.style.opacity = String(clamp((progress - 0.3) / 0.4, 0, 1));
     } else {
-      subDefault.style.opacity = String(1 - progress * 2);
+      subDefault.style.opacity = String(1 - progress * 3);
       subDefault.style.position = 'relative';
       subScrolled.style.display = 'none';
       subScrolled.style.opacity = '0';
