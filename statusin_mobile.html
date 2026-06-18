@@ -8,6 +8,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* Statusin System (do not override per merchant) */
+  --statusin-primary: #16465B;
+  --statusin-deep: #0F3545;
+  --statusin-dark: #123D50;
+  --statusin-muted: #2D5D70;
+  --statusin-soft: #4C7686;
+  --statusin-signal: #6EE7B7;
+  --statusin-signal-soft: rgba(110, 231, 183, 0.18);
+  --statusin-signal-faint: rgba(110, 231, 183, 0.10);
+
+  /* Statusin Surfaces */
+  --statusin-bg-top: #EAF2F6;
+  --statusin-bg-soft: #E4F1F9;
+  --statusin-bg-calm: #F7FAFB;
+
+  /* Merchant Brand (override per business) */
+  --merchant-brand: #374151;
+  --merchant-brand-tint: rgba(55, 65, 81, 0.06);
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background: linear-gradient(to bottom, #EAF2F6, #ffffff 40%, #F7FAFB);
@@ -45,7 +67,7 @@ body {
   width: 256px;
   height: 256px;
   border-radius: 50%;
-  background: rgba(22,70,91,0.035);
+  background: var(--merchant-brand-tint);
   filter: blur(48px);
 }
 .ambient::after {
@@ -107,6 +129,9 @@ body {
 .biz-logo svg {
   width: 100%;
   height: 100%;
+}
+.biz-logo rect {
+  fill: var(--merchant-brand);
 }
 
 /* Header scrolled state */
@@ -187,7 +212,7 @@ body {
   flex: 1;
   overflow-y: auto;
   padding: 0 20px;
-  padding-bottom: 200px;
+  padding-bottom: 120px;
   position: relative;
   z-index: 10;
 }
@@ -392,6 +417,12 @@ body {
   flex: 1;
   min-width: 0;
 }
+.note-author-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
 .note-author-name {
   font-size: 12px;
   font-weight: 600;
@@ -401,6 +432,15 @@ body {
   font-size: 11px;
   color: #6b7280;
   margin-top: 1px;
+}
+.note-time-badge {
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(17,24,39,0.04);
+  color: #6b7280;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .note-text {
   font-size: 13px;
@@ -582,7 +622,7 @@ body {
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
           Ditangani oleh Tim Layanan
         </span>
-        <span class="hero-freshness">Baru saja</span>
+        <span class="hero-freshness">12 mnt lalu</span>
       </div>
       <div class="hero-next">
         <div class="hero-next-top">
@@ -620,7 +660,10 @@ body {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
           </div>
           <div class="note-content">
-            <p class="note-author-name">Tim Layanan</p>
+            <div class="note-author-line">
+              <p class="note-author-name">Tim Layanan</p>
+              <span class="note-time-badge">Hari ini</span>
+            </div>
             <p class="note-text">Layanan Anda sudah diterima dan dicatat oleh tim layanan.</p>
             <p class="note-text-secondary">Catatan awal: Mati total, layar retak.</p>
           </div>
@@ -636,14 +679,16 @@ body {
             <div class="detail-title">Pemeriksaan Awal</div>
             <div class="detail-sub">Dimulai hari ini, 10.45</div>
           </div>
-          <span class="detail-time-badge">12 mnt lalu</span>
         </div>
 
         <!-- Note: Personal state (with name + role) -->
         <div class="note-author">
           <div class="note-avatar note-avatar-personal">A</div>
           <div class="note-content">
-            <p class="note-author-name">Tim Layanan</p>
+            <div class="note-author-line">
+              <p class="note-author-name">Tim Layanan</p>
+              <span class="note-time-badge">12 mnt lalu</span>
+            </div>
             <p class="note-author-detail">Anton, Teknisi</p>
             <p class="note-text">Kami sedang mengecek kondisi awal dan akan memberi update berikutnya setelah pemeriksaan selesai.</p>
           </div>
