@@ -111,7 +111,7 @@
       --nav-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
 
-    body { font-family: 'Inter', sans-serif; }
+    body { font-family: 'Inter', sans-serif; background-color: var(--bg-base); }
 
     .bg-base { background-color: var(--bg-base); transition: background-color 0.6s cubic-bezier(0.32, 0.72, 0, 1); }
     .text-primary { color: var(--text-primary); transition: color 0.4s ease; }
@@ -161,24 +161,49 @@
     .tab-panel { 
       display: none; 
       opacity: 0; 
-      transform: translateY(8px); 
-      transition: opacity 0.4s cubic-bezier(0.32, 0.72, 0, 1), transform 0.4s cubic-bezier(0.32, 0.72, 0, 1); 
     }
     .tab-panel.active { 
       display: block; 
       opacity: 1; 
-      transform: translateY(0); 
-      animation: fadeSlideIn 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+      transform: translateX(0); 
     }
-    @keyframes fadeSlideIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    .tab-panel.slide-in-right {
+      display: block;
+      animation: slideInRight 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    }
+    .tab-panel.slide-in-left {
+      display: block;
+      animation: slideInLeft 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    }
+    .tab-panel.slide-out-right {
+      display: block;
+      animation: slideOutRight 0.3s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    }
+    .tab-panel.slide-out-left {
+      display: block;
+      animation: slideOutLeft 0.3s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideOutRight {
+      from { opacity: 1; transform: translateX(0); }
+      to { opacity: 0; transform: translateX(40px); }
+    }
+    @keyframes slideOutLeft {
+      from { opacity: 1; transform: translateX(0); }
+      to { opacity: 0; transform: translateX(-40px); }
     }
   </style>
 </head>
 <body class="antialiased selection:bg-black/10 flex flex-col min-h-screen">
 
-  <div id="app-frame" class="bg-base w-full h-[100dvh] relative overflow-hidden flex flex-col z-10">
+  <div id="app-frame" class="bg-base w-full relative overflow-hidden flex flex-col z-10" style="height: 100vh; height: -webkit-fill-available; height: 100dvh;">
     
     <div class="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
       <div class="ambient-blob bg-blue-400/30 w-64 h-64 -top-20 -left-20 mix-blend-multiply"></div>
@@ -201,7 +226,7 @@
           </div>
         </div>
       </div>
-      <div id="header-bg" class="absolute inset-0 z-0 opacity-0 transition-opacity duration-200 border-b border-surface-color" style="backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); background-color: var(--bg-base);"></div>
+      <div id="header-bg" class="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 border-b border-surface-color" style="backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); background: rgba(240, 244, 248, 0.78);"></div>
     </header>
 
     <main id="scroll-area" class="flex-1 overflow-y-auto no-scrollbar relative z-10 pb-32 pt-[env(safe-area-inset-top,4rem)]">
@@ -334,7 +359,7 @@
       </div>
     </main>
 
-    <div class="absolute bottom-[env(safe-area-inset-bottom,1.5rem)] left-6 right-6 z-40">
+    <div class="absolute bottom-[env(safe-area-inset-bottom,2rem)] left-6 right-6 z-40">
       <div class="surface-card !rounded-full p-1.5 flex items-center justify-between shadow-[0_16px_40px_rgba(0,0,0,0.12)]">
         <div class="flex items-center gap-3 pl-1">
           <div class="w-9 h-9 rounded-full bg-accent flex items-center justify-center text-accent">
@@ -400,7 +425,30 @@
     
     function setTab(index) {
       if(currentTab === index) return;
+      
+      const direction = index > currentTab ? 'left' : 'right';
+      const oldPanel = document.getElementById(`panel-${currentTab}`);
+      const newPanel = document.getElementById(`panel-${index}`);
+      
+      // Animate out old panel
+      oldPanel.classList.remove('active');
+      oldPanel.classList.add(direction === 'left' ? 'slide-out-left' : 'slide-out-right');
+      
+      // Animate in new panel
+      newPanel.classList.add(direction === 'left' ? 'slide-in-right' : 'slide-in-left');
+      
+      // Clean up after animation
+      setTimeout(() => {
+        oldPanel.classList.remove('slide-out-left', 'slide-out-right');
+        oldPanel.style.display = 'none';
+        newPanel.classList.remove('slide-in-right', 'slide-in-left');
+        newPanel.classList.add('active');
+      }, 400);
+      
       currentTab = index;
+      
+      // Reset scroll position to top
+      scrollArea.scrollTo({ top: 0, behavior: 'smooth' });
       
       const pill = document.getElementById('active-pill');
       pill.style.transform = `translateX(${index * 100}%)`;
@@ -415,14 +463,6 @@
           btn.classList.add('text-secondary');
         }
       }
-
-      document.querySelectorAll('.tab-panel').forEach((panel, i) => {
-        if(i === index) {
-          panel.classList.add('active');
-        } else {
-          panel.classList.remove('active');
-        }
-      });
     }
 
     const themeBtn = document.getElementById('theme-btn');
@@ -452,6 +492,16 @@
       if(className === 'theme-bento') rgb = '243, 244, 246';
       if(className === 'theme-oled') rgb = '0, 0, 0';
       document.body.style.setProperty('--bg-base-rgb', rgb);
+      
+      // Update frosted header background per theme
+      const frostColors = {
+        '': 'rgba(240, 244, 248, 0.78)',
+        'theme-minimal': 'rgba(255, 255, 255, 0.82)',
+        'theme-tactile': 'rgba(224, 229, 236, 0.85)',
+        'theme-bento': 'rgba(243, 244, 246, 0.80)',
+        'theme-oled': 'rgba(0, 0, 0, 0.75)'
+      };
+      headerBg.style.background = frostColors[className] || frostColors[''];
       
       closeThemePopover();
     }
