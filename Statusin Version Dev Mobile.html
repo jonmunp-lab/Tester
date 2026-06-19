@@ -422,27 +422,28 @@
     });
 
     let currentTab = 1; 
+    let isAnimating = false;
     
     function setTab(index) {
-      if(currentTab === index) return;
+      if(currentTab === index || isAnimating) return;
+      isAnimating = true;
       
       const direction = index > currentTab ? 'left' : 'right';
       const oldPanel = document.getElementById(`panel-${currentTab}`);
       const newPanel = document.getElementById(`panel-${index}`);
       
-      // Animate out old panel
-      oldPanel.classList.remove('active');
+      // Start exit animation (keep display:block via the animation class)
       oldPanel.classList.add(direction === 'left' ? 'slide-out-left' : 'slide-out-right');
       
-      // Animate in new panel
+      // Start enter animation
       newPanel.classList.add(direction === 'left' ? 'slide-in-right' : 'slide-in-left');
       
-      // Clean up after animation
+      // Clean up after animation completes
       setTimeout(() => {
-        oldPanel.classList.remove('slide-out-left', 'slide-out-right');
-        oldPanel.style.display = 'none';
+        oldPanel.classList.remove('active', 'slide-out-left', 'slide-out-right');
         newPanel.classList.remove('slide-in-right', 'slide-in-left');
         newPanel.classList.add('active');
+        isAnimating = false;
       }, 400);
       
       currentTab = index;
