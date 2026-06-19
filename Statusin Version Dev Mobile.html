@@ -112,8 +112,8 @@
           </div>
         </section>
 
-        <section id="tab-slider" class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar relative w-full items-start gap-4">
-          <div id="panel-0" class="w-full shrink-0 snap-center overflow-hidden px-[2px] pb-[2px]">
+        <section id="tab-slider" class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar relative w-full items-start gap-4 invisible">
+          <div id="panel-0" class="w-full shrink-0 snap-center">
             <div class="surface-card p-5 flex flex-col gap-4">
               <div class="flex justify-between items-start">
                 <div class="flex flex-col gap-0.5"><h3 class="text-sm font-semibold tracking-tight text-primary">Layanan Diterima</h3><p class="text-[11px] text-secondary">Hari ini, 09.12</p></div>
@@ -126,7 +126,7 @@
               </div>
             </div>
           </div>
-          <div id="panel-1" class="w-full shrink-0 snap-center overflow-hidden px-[2px] pb-[2px]">
+          <div id="panel-1" class="w-full shrink-0 snap-center">
             <div class="surface-card p-2 flex flex-col gap-3">
               <div class="surface-inner p-3 bg-primary/5 border border-surface-color flex justify-between items-center">
                 <div class="flex flex-col gap-0.5"><h3 class="text-sm font-semibold tracking-tight text-primary">Sedang Diperiksa</h3><p class="text-[11px] text-secondary">Dimulai 10.45</p></div>
@@ -148,7 +148,7 @@
               </div>
             </div>
           </div>
-          <div id="panel-2" class="w-full shrink-0 snap-center overflow-hidden px-[2px] pb-[2px]">
+          <div id="panel-2" class="w-full shrink-0 snap-center">
             <div class="surface-card p-8 flex flex-col items-center justify-center text-center opacity-80 border-dashed min-h-[250px]">
               <div class="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-tertiary mb-3"><iconify-icon icon="solar:lock-keyhole-linear" class="text-2xl" aria-label="Lock">🔒</iconify-icon></div>
               <h3 class="text-sm font-semibold tracking-tight text-primary mb-1">Persetujuan Biaya</h3>
@@ -180,7 +180,7 @@
     const tabSlider=document.getElementById('tab-slider');let currentTab=1,isClickScrolling=false;
     function setTab(index){if(currentTab===index)return;currentTab=index;updateTabUI(index);const panel=document.getElementById(`panel-${index}`);if(panel&&tabSlider){isClickScrolling=true;tabSlider.scrollTo({left:panel.offsetLeft-tabSlider.offsetLeft,behavior:'smooth'});setTimeout(()=>isClickScrolling=false,500);}}
     function updateTabUI(index){const pill=document.getElementById('active-pill');if(pill)pill.style.transform=`translateX(${index*100}%)`;for(let i=0;i<3;i++){const btn=document.getElementById(`btn-${i}`);if(btn){if(i===index){btn.classList.remove('text-secondary');btn.classList.add('text-primary');}else{btn.classList.remove('text-primary');btn.classList.add('text-secondary');}}}}
-    if(tabSlider){tabSlider.addEventListener('scroll',()=>{if(isClickScrolling)return;const index=Math.round(tabSlider.scrollLeft/tabSlider.offsetWidth);if(index!==currentTab&&index>=0&&index<=2){currentTab=index;updateTabUI(index);}});setTimeout(()=>{const panel=document.getElementById('panel-1');if(panel)tabSlider.scrollTo({left:panel.offsetLeft-tabSlider.offsetLeft,behavior:'auto'});},50);}
+    if(tabSlider){tabSlider.addEventListener('scroll',()=>{if(isClickScrolling)return;const index=Math.round(tabSlider.scrollLeft/tabSlider.offsetWidth);if(index!==currentTab&&index>=0&&index<=2){currentTab=index;updateTabUI(index);}});setTimeout(()=>{const panel=document.getElementById('panel-1');if(panel)tabSlider.scrollTo({left:panel.offsetLeft-tabSlider.offsetLeft,behavior:'auto'});tabSlider.classList.remove('invisible');},10);}
     const lightbox=document.getElementById('lightbox-modal'),lightboxImg=document.getElementById('lightbox-img');
     window.openLightbox=function(el){const img=el.querySelector('img');if(img&&lightbox){lightboxImg.src=img.src;lightbox.classList.remove('hidden');requestAnimationFrame(()=>{lightbox.classList.remove('opacity-0');lightboxImg.classList.remove('scale-95');lightboxImg.classList.add('scale-100');});}};
     window.closeLightbox=function(){if(lightbox){lightbox.classList.add('opacity-0');lightboxImg.classList.remove('scale-100');lightboxImg.classList.add('scale-95');setTimeout(()=>lightbox.classList.add('hidden'),300);}};
