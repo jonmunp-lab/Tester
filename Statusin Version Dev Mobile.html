@@ -105,14 +105,15 @@
         </section>
         <section class="relative z-30 mb-2">
           <div class="nav-container p-1 rounded-full flex relative">
-            <div id="active-pill" class="nav-active-bg absolute top-1 bottom-1 w-[calc(33.33%-4px)] rounded-full z-0"></div>
+            <div id="active-pill" class="nav-active-bg absolute top-1 bottom-1 left-1 w-[calc(33.33%-4px)] rounded-full z-0"></div>
             <button onclick="setTab(0)" class="tactile-btn relative z-10 flex-1 py-2.5 text-[11px] font-semibold text-secondary transition-colors duration-300" id="btn-0">Diterima</button>
             <button onclick="setTab(1)" class="tactile-btn relative z-10 flex-1 py-2.5 text-[11px] font-semibold text-primary transition-colors duration-300" id="btn-1">Pemeriksaan</button>
             <button onclick="setTab(2)" class="tactile-btn relative z-10 flex-1 py-2.5 text-[11px] font-semibold text-secondary transition-colors duration-300" id="btn-2">Persetujuan</button>
           </div>
         </section>
 
-        <section id="tab-slider" class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar relative w-full items-start" style="scroll-behavior:smooth;">
+        <section class="relative overflow-hidden rounded-[var(--radius-surface)]">
+          <div id="tab-slider" class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar relative w-full items-start gap-4" style="scroll-behavior:smooth;">
           <div id="panel-0" class="w-full shrink-0 snap-center">
             <div class="surface-card p-5 flex flex-col gap-4">
               <div class="flex justify-between items-start">
@@ -154,6 +155,7 @@
               <h3 class="text-sm font-semibold tracking-tight text-primary mb-1">Persetujuan Biaya</h3>
               <p class="text-[11px] text-secondary max-w-[200px] leading-relaxed">Estimasi dan rincian biaya akan muncul di sini setelah pemeriksaan selesai.</p>
             </div>
+          </div>
           </div>
         </section>
         <div class="h-4"></div>
