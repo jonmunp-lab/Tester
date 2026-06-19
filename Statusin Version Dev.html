@@ -236,7 +236,7 @@
         </section>
 
         <section class="relative overflow-hidden">
-          <div id="panels-track" class="flex transition-transform duration-500 cubic-bezier(0.32, 0.72, 0, 1)" style="transform: translateX(-100%);">
+          <div id="panels-track" class="flex" style="transform: translateX(-100%);">
           
             <div id="panel-0" class="w-full flex-shrink-0">
               <div class="surface-card p-5 flex flex-col gap-4">
@@ -356,54 +356,6 @@
         <button onclick="setTheme('theme-tactile','Tactile Clay')" class="text-left px-3 py-2 text-xs font-medium text-primary hover:bg-black/5 rounded-lg w-full transition-colors">3. Tactile Clay</button>
         <button onclick="setTheme('theme-bento','Bento Dynamic')" class="text-left px-3 py-2 text-xs font-medium text-primary hover:bg-black/5 rounded-lg w-full transition-colors">4. Bento Dynamic</button>
         <button onclick="setTheme('theme-oled','OLED Immersive')" class="text-left px-3 py-2 text-xs font-medium text-primary hover:bg-black/5 rounded-lg w-full transition-colors">5. OLED Immersive</button>
-      </div>
-    </div>
-
-    <!-- Onboarding Overlay -->
-    <div id="onboarding" class="absolute inset-0 z-[100] flex flex-col" style="background: var(--bg-base);">
-      <div id="onboarding-track" class="flex-1 flex overflow-hidden relative">
-        <div id="onboarding-slides" class="flex h-full transition-transform duration-600 cubic-bezier(0.32, 0.72, 0, 1)" style="transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1);">
-          
-          <!-- Slide 1 -->
-          <div class="w-full flex-shrink-0 flex flex-col items-center justify-center px-10 text-center">
-            <div class="w-20 h-20 bg-accent rounded-3xl flex items-center justify-center mb-8 shadow-lg">
-              <span class="text-accent text-2xl font-bold tracking-tighter">iR</span>
-            </div>
-            <h2 class="text-2xl font-semibold text-primary tracking-tight mb-3">Selamat Datang</h2>
-            <p class="text-sm text-secondary leading-relaxed max-w-[260px]">Pantau status servis perangkat Anda secara real-time langsung dari genggaman.</p>
-          </div>
-
-          <!-- Slide 2 -->
-          <div class="w-full flex-shrink-0 flex flex-col items-center justify-center px-10 text-center">
-            <div class="w-20 h-20 rounded-3xl bg-primary/5 border border-surface-color flex items-center justify-center mb-8">
-              <iconify-icon icon="solar:eye-scan-linear" class="text-4xl text-primary">👁</iconify-icon>
-            </div>
-            <h2 class="text-2xl font-semibold text-primary tracking-tight mb-3">Transparan</h2>
-            <p class="text-sm text-secondary leading-relaxed max-w-[260px]">Lihat foto, catatan teknisi, dan setiap tahapan proses perbaikan secara langsung.</p>
-          </div>
-
-          <!-- Slide 3 -->
-          <div class="w-full flex-shrink-0 flex flex-col items-center justify-center px-10 text-center">
-            <div class="w-20 h-20 rounded-3xl bg-primary/5 border border-surface-color flex items-center justify-center mb-8">
-              <iconify-icon icon="solar:chat-round-dots-linear" class="text-4xl text-primary">💬</iconify-icon>
-            </div>
-            <h2 class="text-2xl font-semibold text-primary tracking-tight mb-3">Terhubung</h2>
-            <p class="text-sm text-secondary leading-relaxed max-w-[260px]">Chat langsung dengan admin atau teknisi kapan saja. Respons cepat, tanpa antri.</p>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Dots + Button -->
-      <div class="px-8 pb-[env(safe-area-inset-bottom,2rem)] pt-6 flex flex-col items-center gap-6">
-        <div class="flex gap-2" id="onboarding-dots">
-          <div class="w-6 h-1.5 rounded-full bg-accent transition-all duration-300"></div>
-          <div class="w-1.5 h-1.5 rounded-full bg-primary/20 transition-all duration-300"></div>
-          <div class="w-1.5 h-1.5 rounded-full bg-primary/20 transition-all duration-300"></div>
-        </div>
-        <button id="onboarding-btn" onclick="nextOnboarding()" class="tactile-btn w-full py-3.5 bg-accent text-accent text-sm font-semibold rounded-2xl transition-all duration-300 shadow-lg">
-          Lanjut
-        </button>
       </div>
     </div>
 
@@ -589,90 +541,7 @@
 
     // Sync tab state on initial load
     document.addEventListener('DOMContentLoaded', () => {
-      // Set initial --bg-base-rgb for scroll header
       document.body.style.setProperty('--bg-base-rgb', '240, 244, 248');
-    });
-
-    // === ONBOARDING ===
-    let onboardingSlide = 0;
-    const onboardingTotal = 3;
-    const onboardingSlides = document.getElementById('onboarding-slides');
-    const onboardingDots = document.getElementById('onboarding-dots');
-    const onboardingBtn = document.getElementById('onboarding-btn');
-    const onboarding = document.getElementById('onboarding');
-
-    function updateOnboardingDots() {
-      const dots = onboardingDots.children;
-      for (let i = 0; i < dots.length; i++) {
-        if (i === onboardingSlide) {
-          dots[i].className = 'w-6 h-1.5 rounded-full bg-accent transition-all duration-300';
-        } else {
-          dots[i].className = 'w-1.5 h-1.5 rounded-full bg-primary/20 transition-all duration-300';
-        }
-      }
-    }
-
-    function nextOnboarding() {
-      if (onboardingSlide < onboardingTotal - 1) {
-        onboardingSlide++;
-        onboardingSlides.style.transform = `translateX(${-onboardingSlide * 100}%)`;
-        updateOnboardingDots();
-        if (onboardingSlide === onboardingTotal - 1) {
-          onboardingBtn.textContent = 'Mulai';
-        }
-      } else {
-        // Close onboarding
-        onboarding.style.opacity = '0';
-        onboarding.style.transform = 'scale(1.05)';
-        onboarding.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-        setTimeout(() => {
-          onboarding.style.display = 'none';
-        }, 400);
-      }
-    }
-
-    // Onboarding swipe
-    let obStartX = 0;
-    let obDeltaX = 0;
-    let obSwiping = false;
-
-    onboardingSlides.addEventListener('touchstart', (e) => {
-      obStartX = e.touches[0].clientX;
-      obDeltaX = 0;
-      obSwiping = true;
-      onboardingSlides.style.transition = 'none';
-    }, { passive: true });
-
-    onboardingSlides.addEventListener('touchmove', (e) => {
-      if (!obSwiping) return;
-      obDeltaX = e.touches[0].clientX - obStartX;
-      const baseOffset = -onboardingSlide * 100;
-      const swipePercent = (obDeltaX / onboarding.offsetWidth) * 100;
-      
-      let finalPercent = swipePercent;
-      if ((onboardingSlide === 0 && obDeltaX > 0) || (onboardingSlide === onboardingTotal - 1 && obDeltaX < 0)) {
-        finalPercent = swipePercent * 0.3;
-      }
-      
-      onboardingSlides.style.transform = `translateX(${baseOffset + finalPercent}%)`;
-    }, { passive: true });
-
-    onboardingSlides.addEventListener('touchend', () => {
-      if (!obSwiping) return;
-      obSwiping = false;
-      onboardingSlides.style.transition = 'transform 0.6s cubic-bezier(0.32, 0.72, 0, 1)';
-      
-      const threshold = onboarding.offsetWidth * 0.2;
-      
-      if (obDeltaX < -threshold && onboardingSlide < onboardingTotal - 1) {
-        onboardingSlide++;
-      } else if (obDeltaX > threshold && onboardingSlide > 0) {
-        onboardingSlide--;
-      }
-      
-      onboardingSlides.style.transform = `translateX(${-onboardingSlide * 100}%)`;
-      updateOnboardingDots();
-      onboardingBtn.textContent = onboardingSlide === onboardingTotal - 1 ? 'Mulai' : 'Lanjut';
     });
   </script>
 </body></html>
