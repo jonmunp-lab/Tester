@@ -202,7 +202,7 @@
           </div>
         </div>
       </div>
-      <div id="header-bg" class="absolute inset-0 z-0 opacity-0 transition-opacity duration-200 border-b border-surface-color" style="backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); background-color: var(--bg-base);"></div>
+      <div id="header-bg" class="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 border-b border-surface-color" style="backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); background: rgba(240, 244, 248, 0.78);"></div>
     </header>
 
     <main id="scroll-area" class="flex-1 overflow-y-auto no-scrollbar relative z-10 pb-32 pt-[env(safe-area-inset-top,4rem)]">
@@ -444,9 +444,22 @@
       }
     });
 
+    // Frosted glass background colors per theme
+    const frostColors = {
+      '': 'rgba(240, 244, 248, 0.78)',
+      'theme-minimal': 'rgba(255, 255, 255, 0.82)',
+      'theme-tactile': 'rgba(224, 229, 236, 0.85)',
+      'theme-bento': 'rgba(243, 244, 246, 0.80)',
+      'theme-oled': 'rgba(0, 0, 0, 0.75)'
+    };
+    let currentThemeClass = '';
+
     // Mempertahankan kelas sm:items-center sm:justify-center agar layout HP tidak rusak saat berganti tema via Magic Wand
     function setTheme(className, name) {
       document.body.className = `antialiased selection:bg-black/10 flex flex-col sm:items-center sm:justify-center min-h-screen ${className}`;
+      currentThemeClass = className;
+      headerBg.style.background = frostColors[className] || frostColors[''];
+      
       let rgb = '240, 244, 248';
       if(className === 'theme-minimal') rgb = '255, 255, 255';
       if(className === 'theme-tactile') rgb = '224, 229, 236';
