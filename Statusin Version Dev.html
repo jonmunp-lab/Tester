@@ -187,26 +187,26 @@
       <div class="ambient-blob bg-purple-300/20 w-72 h-72 bottom-0 left-10 mix-blend-multiply"></div>
     </div>
 
-    <header id="header" class="absolute top-0 w-full z-40 transition-all duration-300 pt-[env(safe-area-inset-top,1rem)]">
-      <div id="header-inner" class="px-5 py-4 flex items-center justify-between">
+    <header id="header" class="absolute top-0 w-full z-40 transition-all duration-300 pt-[env(safe-area-inset-top,0.5rem)]">
+      <div id="header-inner" class="px-5 py-2.5 flex items-center justify-between relative z-10">
         <div class="flex items-center gap-3">
-          <div id="logo-block" class="w-10 h-10 bg-accent rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 origin-left overflow-hidden">
-            <span class="text-accent text-sm font-semibold tracking-tighter">iR</span>
+          <div id="logo-block" class="w-8 h-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300 origin-left overflow-hidden">
+            <span class="text-accent text-xs font-semibold tracking-tighter">iR</span>
           </div>
           <div id="title-container" class="flex flex-col justify-center transition-all duration-300">
             <h1 class="text-sm font-semibold text-primary tracking-tight">iRepair Jakarta</h1>
             <div class="relative h-4 w-56 overflow-hidden">
-              <p id="sub-default" class="absolute top-0 left-0 text-xs text-secondary transition-all duration-300">SRV-009803 · Budi</p>
-              <p id="sub-scrolled" class="absolute top-0 left-0 text-xs text-secondary transition-all duration-300 opacity-0">Pemeriksaan Awal · SRV-009803 · Budi</p>
+              <p id="sub-default" class="absolute top-0 left-0 text-[11px] text-secondary transition-all duration-300">SRV-009803 · Budi</p>
+              <p id="sub-scrolled" class="absolute top-0 left-0 text-[11px] text-secondary transition-all duration-300 opacity-0">Pemeriksaan Awal · SRV-009803 · Budi</p>
             </div>
           </div>
         </div>
       </div>
-      <div id="header-bg" class="absolute inset-0 -z-10 opacity-0 transition-opacity duration-200 border-b border-surface-color" style="backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); background-color: var(--bg-base);"></div>
+      <div id="header-bg" class="absolute inset-0 z-0 opacity-0 transition-opacity duration-200 border-b border-surface-color" style="backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); background-color: var(--bg-base);"></div>
     </header>
 
-    <main id="scroll-area" class="flex-1 overflow-y-auto no-scrollbar relative z-10 pb-32 pt-[env(safe-area-inset-top,4rem)]">
-      <div class="px-5 mt-20 flex flex-col gap-6">
+    <main id="scroll-area" class="flex-1 overflow-y-auto no-scrollbar relative z-10 pb-32 pt-[env(safe-area-inset-top,3rem)]">
+      <div class="px-5 mt-14 flex flex-col gap-6">
         
         <section class="flex flex-col gap-1.5">
           <p class="text-xs font-semibold uppercase tracking-widest text-secondary">Service iPhone 11</p>
@@ -387,7 +387,7 @@
         // Logo: fade out and shrink completely
         logoBlock.style.transform = `scale(${1 - easeProgress})`;
         logoBlock.style.opacity = Math.max(1 - (easeProgress * 3), 0);
-        logoBlock.style.width = `${40 - (easeProgress * 40)}px`;
+        logoBlock.style.width = `${32 - (easeProgress * 32)}px`;
         logoBlock.style.marginRight = `${-easeProgress * 12}px`;
 
         // Subtitle crossfade
