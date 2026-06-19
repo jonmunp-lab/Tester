@@ -190,7 +190,7 @@
     <header id="header" class="absolute top-0 w-full z-40 transition-all duration-300 pt-[env(safe-area-inset-top,1rem)]">
       <div id="header-inner" class="px-5 py-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div id="logo-block" class="w-10 h-10 bg-accent rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 origin-left">
+          <div id="logo-block" class="w-10 h-10 bg-accent rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 origin-left overflow-hidden">
             <span class="text-accent text-sm font-semibold tracking-tighter">iR</span>
           </div>
           <div id="title-container" class="flex flex-col justify-center transition-all duration-300">
@@ -378,21 +378,25 @@
     scrollArea.addEventListener('scroll', () => {
       requestAnimationFrame(() => {
         let y = scrollArea.scrollTop;
-        let progress = Math.min(Math.max(y / 100, 0), 1);
+        let progress = Math.min(Math.max(y / 80, 0), 1);
         let easeProgress = 1 - Math.pow(1 - progress, 3);
 
         document.body.style.setProperty('--scroll-progress', easeProgress);
         headerBg.style.opacity = easeProgress;
-        headerBg.style.backgroundColor = `rgba(var(--bg-base-rgb, 255,255,255), ${easeProgress * 0.9})`;
+        headerBg.style.backgroundColor = `rgba(var(--bg-base-rgb, 255,255,255), ${easeProgress * 0.92})`;
 
-        logoBlock.style.transform = `scale(${1 - (easeProgress * 0.15)})`;
-        logoBlock.style.opacity = 1 - (easeProgress * 0.2);
+        // Logo: fade out and shrink completely
+        logoBlock.style.transform = `scale(${1 - easeProgress}) translateX(${-easeProgress * 10}px)`;
+        logoBlock.style.opacity = 1 - (easeProgress * 2.5);
+        logoBlock.style.width = `${40 - (easeProgress * 40)}px`;
+        logoBlock.style.marginRight = `${-easeProgress * 12}px`;
 
-        subDefault.style.transform = `translateY(${-easeProgress * 16}px)`;
-        subDefault.style.opacity = 1 - (easeProgress * 1.5);
+        // Subtitle crossfade
+        subDefault.style.transform = `translateY(${-easeProgress * 14}px)`;
+        subDefault.style.opacity = 1 - (easeProgress * 2.5);
         
-        subScrolled.style.transform = `translateY(${14 - (easeProgress * 14)}px)`;
-        subScrolled.style.opacity = Math.min(easeProgress * 2, 1);
+        subScrolled.style.transform = `translateY(${12 - (easeProgress * 12)}px)`;
+        subScrolled.style.opacity = Math.min(easeProgress * 2.5, 1);
       });
     });
 
