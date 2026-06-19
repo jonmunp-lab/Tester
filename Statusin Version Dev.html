@@ -158,22 +158,13 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     .tactile-btn:active { transform: scale(0.96); opacity: 0.9; }
 
-    /* Tab Layout Display */
-    .tab-panel { 
-      display: none; 
-      opacity: 0; 
-      transform: translateY(8px); 
-      transition: opacity 0.4s cubic-bezier(0.32, 0.72, 0, 1), transform 0.4s cubic-bezier(0.32, 0.72, 0, 1); 
+    /* Tab Layout - Swipe Track */
+    #panels-track {
+      transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+      will-change: transform;
     }
-    .tab-panel.active { 
-      display: block; 
-      opacity: 1; 
-      transform: translateY(0); 
-      animation: fadeSlideIn 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-    }
-    @keyframes fadeSlideIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    #panels-track.swiping {
+      transition: none;
     }
   </style>
 </head>
@@ -244,92 +235,94 @@
           </div>
         </section>
 
-        <section class="relative min-h-[300px]">
+        <section class="relative overflow-hidden">
+          <div id="panels-track" class="flex transition-transform duration-500 cubic-bezier(0.32, 0.72, 0, 1)" style="transform: translateX(-100%);">
           
-          <div id="panel-0" class="tab-panel">
-            <div class="surface-card p-5 flex flex-col gap-4">
-              <div class="flex justify-between items-start">
-                <div class="flex flex-col gap-0.5">
-                  <h3 class="text-sm font-semibold tracking-tight text-primary">Layanan Diterima</h3>
-                  <p class="text-[11px] text-secondary">Hari ini, 09.12</p>
+            <div id="panel-0" class="w-full flex-shrink-0">
+              <div class="surface-card p-5 flex flex-col gap-4">
+                <div class="flex justify-between items-start">
+                  <div class="flex flex-col gap-0.5">
+                    <h3 class="text-sm font-semibold tracking-tight text-primary">Layanan Diterima</h3>
+                    <p class="text-[11px] text-secondary">Hari ini, 09.12</p>
+                  </div>
+                  <div class="w-7 h-7 rounded-full bg-primary/5 flex items-center justify-center text-primary">
+                    <iconify-icon icon="solar:check-circle-linear" class="text-lg" aria-label="Check">✓</iconify-icon>
+                  </div>
                 </div>
-                <div class="w-7 h-7 rounded-full bg-primary/5 flex items-center justify-center text-primary">
-                  <iconify-icon icon="solar:check-circle-linear" class="text-lg" aria-label="Check">✓</iconify-icon>
-                </div>
-              </div>
-              <div class="w-full h-[1px] bg-primary/5"></div>
-              <div class="flex gap-3 items-start">
-                <div class="w-8 h-8 rounded-full border border-surface-color flex items-center justify-center text-secondary bg-primary/5 mt-1">
-                  <iconify-icon icon="solar:inbox-in-linear" aria-label="Inbox">📥</iconify-icon>
-                </div>
-                <div class="flex-1">
-                  <p class="text-xs text-primary leading-relaxed">Perangkat diterima oleh tim layanan. Catatan awal: Mati total, layar retak di ujung.</p>
+                <div class="w-full h-[1px] bg-primary/5"></div>
+                <div class="flex gap-3 items-start">
+                  <div class="w-8 h-8 rounded-full border border-surface-color flex items-center justify-center text-secondary bg-primary/5 mt-1">
+                    <iconify-icon icon="solar:inbox-in-linear" aria-label="Inbox">📥</iconify-icon>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-xs text-primary leading-relaxed">Perangkat diterima oleh tim layanan. Catatan awal: Mati total, layar retak di ujung.</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div id="panel-1" class="tab-panel active">
-            <div class="surface-card p-1 flex flex-col gap-1">
-              
-              <div class="surface-inner px-4 py-4 border border-surface-color bg-primary/5 flex justify-between items-center">
-                <div class="flex flex-col gap-0.5">
-                  <h3 class="text-sm font-semibold tracking-tight text-primary">Sedang Diperiksa</h3>
-                  <p class="text-[11px] text-secondary">Dimulai 10.45</p>
-                </div>
-                <div class="bg-accent px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                  <iconify-icon icon="solar:pulse-2-linear" class="text-accent text-sm" aria-label="Pulse">⚡</iconify-icon>
-                  <span class="text-[10px] font-medium text-accent uppercase tracking-wider">Proses</span>
-                </div>
-              </div>
-
-              <div class="surface-inner px-4 py-3 border border-surface-color bg-primary/[0.02] flex items-center justify-between group cursor-pointer hover:bg-primary/5 transition-colors">
-                <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary relative overflow-hidden">
-                     <span class="text-sm font-semibold">A</span>
-                  </div>
-                  <div class="flex flex-col">
-                    <p class="text-xs font-semibold text-primary">Anton</p>
-                    <p class="text-[10px] text-secondary">Teknisi Senior</p>
-                  </div>
-                </div>
-                <button class="w-8 h-8 rounded-full border border-surface-color flex items-center justify-center text-primary bg-base shadow-sm tactile-btn">
-                  <iconify-icon icon="solar:chat-round-dots-linear" aria-label="Chat">💬</iconify-icon>
-                </button>
-              </div>
-
-              <div class="surface-inner px-4 py-4 border border-surface-color bg-primary/[0.02] flex flex-col gap-4">
-                <p class="text-[12px] text-primary leading-relaxed">"Kami sedang membongkar panel layar untuk mengecek tegangan pada motherboard. Kemungkinan ada korsleting akibat air, namun kami pastikan dulu."</p>
+            <div id="panel-1" class="w-full flex-shrink-0">
+              <div class="surface-card p-1 flex flex-col gap-1">
                 
-                <div class="flex gap-2 overflow-x-auto snap-x no-scrollbar -mx-4 px-4 pb-1">
-                  <div class="snap-center shrink-0 w-[140px] h-[90px] surface-inner overflow-hidden relative shadow-sm">
-                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/917d6f93-fb36-439a-8c48-884b67b35381_1600w.jpg" alt="Repair 1" class="w-full h-full object-cover" onerror="this.style.display='none';this.parentElement.classList.add('flex','items-center','justify-center','bg-primary/5');this.parentElement.insertAdjacentHTML('beforeend','<span class=\'text-xs text-tertiary\'>📷</span>')">
-                    <div class="absolute bottom-1 right-1 bg-black/50 backdrop-blur-md px-1.5 py-0.5 rounded text-[9px] text-white flex items-center gap-1">
-                      <iconify-icon icon="solar:camera-linear" aria-label="Camera">📷</iconify-icon> 10.50
+                <div class="surface-inner px-4 py-4 border border-surface-color bg-primary/5 flex justify-between items-center">
+                  <div class="flex flex-col gap-0.5">
+                    <h3 class="text-sm font-semibold tracking-tight text-primary">Sedang Diperiksa</h3>
+                    <p class="text-[11px] text-secondary">Dimulai 10.45</p>
+                  </div>
+                  <div class="bg-accent px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                    <iconify-icon icon="solar:pulse-2-linear" class="text-accent text-sm" aria-label="Pulse">⚡</iconify-icon>
+                    <span class="text-[10px] font-medium text-accent uppercase tracking-wider">Proses</span>
+                  </div>
+                </div>
+
+                <div class="surface-inner px-4 py-3 border border-surface-color bg-primary/[0.02] flex items-center justify-between group cursor-pointer hover:bg-primary/5 transition-colors">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary relative overflow-hidden">
+                       <span class="text-sm font-semibold">A</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <p class="text-xs font-semibold text-primary">Anton</p>
+                      <p class="text-[10px] text-secondary">Teknisi Senior</p>
                     </div>
                   </div>
-                  <div class="snap-center shrink-0 w-[140px] h-[90px] surface-inner overflow-hidden relative shadow-sm">
-                    <img src="https://images.unsplash.com/photo-1591337676887-a217a6970a8a?auto=format&amp;fit=crop&amp;w=300&amp;q=80" alt="Repair iPhone" class="w-full h-full object-cover" onerror="this.style.display='none';this.parentElement.classList.add('flex','items-center','justify-center','bg-primary/5');this.parentElement.insertAdjacentHTML('beforeend','<span class=\'text-xs text-tertiary\'>📷</span>')">
-                    <div class="absolute bottom-1 right-1 bg-black/50 backdrop-blur-md px-1.5 py-0.5 rounded text-[9px] text-white flex items-center gap-1">
-                      <iconify-icon icon="solar:camera-linear" aria-label="Camera">📷</iconify-icon> 11.05
+                  <button class="w-8 h-8 rounded-full border border-surface-color flex items-center justify-center text-primary bg-base shadow-sm tactile-btn">
+                    <iconify-icon icon="solar:chat-round-dots-linear" aria-label="Chat">💬</iconify-icon>
+                  </button>
+                </div>
+
+                <div class="surface-inner px-4 py-4 border border-surface-color bg-primary/[0.02] flex flex-col gap-4">
+                  <p class="text-[12px] text-primary leading-relaxed">"Kami sedang membongkar panel layar untuk mengecek tegangan pada motherboard. Kemungkinan ada korsleting akibat air, namun kami pastikan dulu."</p>
+                  
+                  <div class="flex gap-2 overflow-x-auto snap-x no-scrollbar -mx-4 px-4 pb-1">
+                    <div class="snap-center shrink-0 w-[140px] h-[90px] surface-inner overflow-hidden relative shadow-sm">
+                      <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/917d6f93-fb36-439a-8c48-884b67b35381_1600w.jpg" alt="Repair 1" class="w-full h-full object-cover" onerror="this.style.display='none';this.parentElement.classList.add('flex','items-center','justify-center','bg-primary/5');this.parentElement.insertAdjacentHTML('beforeend','<span class=\'text-xs text-tertiary\'>📷</span>')">
+                      <div class="absolute bottom-1 right-1 bg-black/50 backdrop-blur-md px-1.5 py-0.5 rounded text-[9px] text-white flex items-center gap-1">
+                        <iconify-icon icon="solar:camera-linear" aria-label="Camera">📷</iconify-icon> 10.50
+                      </div>
+                    </div>
+                    <div class="snap-center shrink-0 w-[140px] h-[90px] surface-inner overflow-hidden relative shadow-sm">
+                      <img src="https://images.unsplash.com/photo-1591337676887-a217a6970a8a?auto=format&amp;fit=crop&amp;w=300&amp;q=80" alt="Repair iPhone" class="w-full h-full object-cover" onerror="this.style.display='none';this.parentElement.classList.add('flex','items-center','justify-center','bg-primary/5');this.parentElement.insertAdjacentHTML('beforeend','<span class=\'text-xs text-tertiary\'>📷</span>')">
+                      <div class="absolute bottom-1 right-1 bg-black/50 backdrop-blur-md px-1.5 py-0.5 rounded text-[9px] text-white flex items-center gap-1">
+                        <iconify-icon icon="solar:camera-linear" aria-label="Camera">📷</iconify-icon> 11.05
+                      </div>
                     </div>
                   </div>
                 </div>
+
               </div>
-
             </div>
-          </div>
 
-          <div id="panel-2" class="tab-panel">
-            <div class="surface-card p-8 flex flex-col items-center justify-center text-center opacity-80 border-dashed">
-              <div class="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-tertiary mb-3">
-                <iconify-icon icon="solar:lock-keyhole-linear" class="text-2xl" aria-label="Lock">🔒</iconify-icon>
+            <div id="panel-2" class="w-full flex-shrink-0">
+              <div class="surface-card p-8 flex flex-col items-center justify-center text-center opacity-80 border-dashed">
+                <div class="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-tertiary mb-3">
+                  <iconify-icon icon="solar:lock-keyhole-linear" class="text-2xl" aria-label="Lock">🔒</iconify-icon>
+                </div>
+                <h3 class="text-sm font-semibold tracking-tight text-primary mb-1">Persetujuan Biaya</h3>
+                <p class="text-[11px] text-secondary max-w-[200px] leading-relaxed">Estimasi dan rincian biaya akan muncul di sini setelah pemeriksaan selesai.</p>
               </div>
-              <h3 class="text-sm font-semibold tracking-tight text-primary mb-1">Persetujuan Biaya</h3>
-              <p class="text-[11px] text-secondary max-w-[200px] leading-relaxed">Estimasi dan rincian biaya akan muncul di sini setelah pemeriksaan selesai.</p>
             </div>
-          </div>
 
+          </div>
         </section>
         <div class="h-8"></div>
       </div>
@@ -366,6 +359,54 @@
       </div>
     </div>
 
+    <!-- Onboarding Overlay -->
+    <div id="onboarding" class="absolute inset-0 z-[100] flex flex-col" style="background: var(--bg-base);">
+      <div id="onboarding-track" class="flex-1 flex overflow-hidden relative">
+        <div id="onboarding-slides" class="flex h-full transition-transform duration-600 cubic-bezier(0.32, 0.72, 0, 1)" style="transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1);">
+          
+          <!-- Slide 1 -->
+          <div class="w-full flex-shrink-0 flex flex-col items-center justify-center px-10 text-center">
+            <div class="w-20 h-20 bg-accent rounded-3xl flex items-center justify-center mb-8 shadow-lg">
+              <span class="text-accent text-2xl font-bold tracking-tighter">iR</span>
+            </div>
+            <h2 class="text-2xl font-semibold text-primary tracking-tight mb-3">Selamat Datang</h2>
+            <p class="text-sm text-secondary leading-relaxed max-w-[260px]">Pantau status servis perangkat Anda secara real-time langsung dari genggaman.</p>
+          </div>
+
+          <!-- Slide 2 -->
+          <div class="w-full flex-shrink-0 flex flex-col items-center justify-center px-10 text-center">
+            <div class="w-20 h-20 rounded-3xl bg-primary/5 border border-surface-color flex items-center justify-center mb-8">
+              <iconify-icon icon="solar:eye-scan-linear" class="text-4xl text-primary">👁</iconify-icon>
+            </div>
+            <h2 class="text-2xl font-semibold text-primary tracking-tight mb-3">Transparan</h2>
+            <p class="text-sm text-secondary leading-relaxed max-w-[260px]">Lihat foto, catatan teknisi, dan setiap tahapan proses perbaikan secara langsung.</p>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="w-full flex-shrink-0 flex flex-col items-center justify-center px-10 text-center">
+            <div class="w-20 h-20 rounded-3xl bg-primary/5 border border-surface-color flex items-center justify-center mb-8">
+              <iconify-icon icon="solar:chat-round-dots-linear" class="text-4xl text-primary">💬</iconify-icon>
+            </div>
+            <h2 class="text-2xl font-semibold text-primary tracking-tight mb-3">Terhubung</h2>
+            <p class="text-sm text-secondary leading-relaxed max-w-[260px]">Chat langsung dengan admin atau teknisi kapan saja. Respons cepat, tanpa antri.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Dots + Button -->
+      <div class="px-8 pb-[env(safe-area-inset-bottom,2rem)] pt-6 flex flex-col items-center gap-6">
+        <div class="flex gap-2" id="onboarding-dots">
+          <div class="w-6 h-1.5 rounded-full bg-accent transition-all duration-300"></div>
+          <div class="w-1.5 h-1.5 rounded-full bg-primary/20 transition-all duration-300"></div>
+          <div class="w-1.5 h-1.5 rounded-full bg-primary/20 transition-all duration-300"></div>
+        </div>
+        <button id="onboarding-btn" onclick="nextOnboarding()" class="tactile-btn w-full py-3.5 bg-accent text-accent text-sm font-semibold rounded-2xl transition-all duration-300 shadow-lg">
+          Lanjut
+        </button>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -397,11 +438,15 @@
       });
     });
 
-    let currentTab = 1; 
+    let currentTab = 1;
+    const panelsTrack = document.getElementById('panels-track');
+    const totalTabs = 3;
     
     function setTab(index) {
       if(currentTab === index) return;
       currentTab = index;
+      
+      panelsTrack.style.transform = `translateX(${-index * 100}%)`;
       
       const pill = document.getElementById('active-pill');
       pill.style.transform = `translateX(${index * 100}%)`;
@@ -416,15 +461,71 @@
           btn.classList.add('text-secondary');
         }
       }
-
-      document.querySelectorAll('.tab-panel').forEach((panel, i) => {
-        if(i === index) {
-          panel.classList.add('active');
-        } else {
-          panel.classList.remove('active');
-        }
-      });
     }
+
+    // Swipe gesture for tab panels
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchDeltaX = 0;
+    let isSwiping = false;
+    let isScrolling = false;
+
+    panelsTrack.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchDeltaX = 0;
+      isSwiping = false;
+      isScrolling = false;
+    }, { passive: true });
+
+    panelsTrack.addEventListener('touchmove', (e) => {
+      const dx = e.touches[0].clientX - touchStartX;
+      const dy = e.touches[0].clientY - touchStartY;
+      
+      // Determine if horizontal swipe or vertical scroll
+      if (!isSwiping && !isScrolling) {
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 8) {
+          isSwiping = true;
+          panelsTrack.classList.add('swiping');
+        } else if (Math.abs(dy) > 8) {
+          isScrolling = true;
+          return;
+        }
+      }
+      
+      if (!isSwiping) return;
+      
+      touchDeltaX = dx;
+      const baseOffset = -currentTab * 100;
+      const swipePercent = (dx / panelsTrack.offsetWidth) * 100;
+      
+      // Resistance at edges
+      let finalPercent = swipePercent;
+      if ((currentTab === 0 && dx > 0) || (currentTab === totalTabs - 1 && dx < 0)) {
+        finalPercent = swipePercent * 0.3;
+      }
+      
+      panelsTrack.style.transform = `translateX(${baseOffset + finalPercent}%)`;
+    }, { passive: true });
+
+    panelsTrack.addEventListener('touchend', () => {
+      if (!isSwiping) return;
+      panelsTrack.classList.remove('swiping');
+      
+      const threshold = panelsTrack.offsetWidth * 0.2;
+      
+      if (touchDeltaX < -threshold && currentTab < totalTabs - 1) {
+        setTab(currentTab + 1);
+      } else if (touchDeltaX > threshold && currentTab > 0) {
+        setTab(currentTab - 1);
+      } else {
+        // Snap back
+        panelsTrack.style.transform = `translateX(${-currentTab * 100}%)`;
+      }
+      
+      isSwiping = false;
+      touchDeltaX = 0;
+    });
 
     const themeBtn = document.getElementById('theme-btn');
     const themePopover = document.getElementById('theme-popover');
@@ -490,6 +591,88 @@
     document.addEventListener('DOMContentLoaded', () => {
       // Set initial --bg-base-rgb for scroll header
       document.body.style.setProperty('--bg-base-rgb', '240, 244, 248');
+    });
+
+    // === ONBOARDING ===
+    let onboardingSlide = 0;
+    const onboardingTotal = 3;
+    const onboardingSlides = document.getElementById('onboarding-slides');
+    const onboardingDots = document.getElementById('onboarding-dots');
+    const onboardingBtn = document.getElementById('onboarding-btn');
+    const onboarding = document.getElementById('onboarding');
+
+    function updateOnboardingDots() {
+      const dots = onboardingDots.children;
+      for (let i = 0; i < dots.length; i++) {
+        if (i === onboardingSlide) {
+          dots[i].className = 'w-6 h-1.5 rounded-full bg-accent transition-all duration-300';
+        } else {
+          dots[i].className = 'w-1.5 h-1.5 rounded-full bg-primary/20 transition-all duration-300';
+        }
+      }
+    }
+
+    function nextOnboarding() {
+      if (onboardingSlide < onboardingTotal - 1) {
+        onboardingSlide++;
+        onboardingSlides.style.transform = `translateX(${-onboardingSlide * 100}%)`;
+        updateOnboardingDots();
+        if (onboardingSlide === onboardingTotal - 1) {
+          onboardingBtn.textContent = 'Mulai';
+        }
+      } else {
+        // Close onboarding
+        onboarding.style.opacity = '0';
+        onboarding.style.transform = 'scale(1.05)';
+        onboarding.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        setTimeout(() => {
+          onboarding.style.display = 'none';
+        }, 400);
+      }
+    }
+
+    // Onboarding swipe
+    let obStartX = 0;
+    let obDeltaX = 0;
+    let obSwiping = false;
+
+    onboardingSlides.addEventListener('touchstart', (e) => {
+      obStartX = e.touches[0].clientX;
+      obDeltaX = 0;
+      obSwiping = true;
+      onboardingSlides.style.transition = 'none';
+    }, { passive: true });
+
+    onboardingSlides.addEventListener('touchmove', (e) => {
+      if (!obSwiping) return;
+      obDeltaX = e.touches[0].clientX - obStartX;
+      const baseOffset = -onboardingSlide * 100;
+      const swipePercent = (obDeltaX / onboarding.offsetWidth) * 100;
+      
+      let finalPercent = swipePercent;
+      if ((onboardingSlide === 0 && obDeltaX > 0) || (onboardingSlide === onboardingTotal - 1 && obDeltaX < 0)) {
+        finalPercent = swipePercent * 0.3;
+      }
+      
+      onboardingSlides.style.transform = `translateX(${baseOffset + finalPercent}%)`;
+    }, { passive: true });
+
+    onboardingSlides.addEventListener('touchend', () => {
+      if (!obSwiping) return;
+      obSwiping = false;
+      onboardingSlides.style.transition = 'transform 0.6s cubic-bezier(0.32, 0.72, 0, 1)';
+      
+      const threshold = onboarding.offsetWidth * 0.2;
+      
+      if (obDeltaX < -threshold && onboardingSlide < onboardingTotal - 1) {
+        onboardingSlide++;
+      } else if (obDeltaX > threshold && onboardingSlide > 0) {
+        onboardingSlide--;
+      }
+      
+      onboardingSlides.style.transform = `translateX(${-onboardingSlide * 100}%)`;
+      updateOnboardingDots();
+      onboardingBtn.textContent = onboardingSlide === onboardingTotal - 1 ? 'Mulai' : 'Lanjut';
     });
   </script>
 </body></html>
