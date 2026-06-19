@@ -195,9 +195,9 @@
           </div>
           <div id="title-container" class="flex flex-col justify-center transition-all duration-300">
             <h1 class="text-sm font-semibold text-primary tracking-tight">iRepair Jakarta</h1>
-            <div class="relative h-4 w-48 overflow-hidden">
+            <div class="relative h-4 w-56 overflow-hidden">
               <p id="sub-default" class="absolute top-0 left-0 text-xs text-secondary transition-all duration-300">SRV-009803 · Budi</p>
-              <p id="sub-scrolled" class="absolute top-4 left-0 text-xs text-secondary transition-all duration-300 opacity-0">Pemeriksaan Awal · SRV-009803 · Budi</p>
+              <p id="sub-scrolled" class="absolute top-0 left-0 text-xs text-secondary transition-all duration-300 opacity-0 translate-y-2">Pemeriksaan Awal · SRV-009803 · Budi</p>
             </div>
           </div>
         </div>
@@ -392,10 +392,10 @@
         logoBlock.style.marginRight = `${-easeProgress * 12}px`;
 
         // Subtitle crossfade
-        subDefault.style.transform = `translateY(${-easeProgress * 14}px)`;
+        subDefault.style.transform = `translateY(${-easeProgress * 10}px)`;
         subDefault.style.opacity = 1 - (easeProgress * 2.5);
         
-        subScrolled.style.transform = `translateY(${12 - (easeProgress * 12)}px)`;
+        subScrolled.style.transform = `translateY(${6 - (easeProgress * 6)}px)`;
         subScrolled.style.opacity = Math.min(easeProgress * 2.5, 1);
       });
     });
