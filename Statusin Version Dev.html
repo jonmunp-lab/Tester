@@ -197,7 +197,7 @@
             <h1 class="text-sm font-semibold text-primary tracking-tight">iRepair Jakarta</h1>
             <div class="relative h-4 w-48 overflow-hidden">
               <p id="sub-default" class="absolute top-0 left-0 text-xs text-secondary transition-all duration-300">SRV-009803 · Budi</p>
-              <p id="sub-scrolled" class="absolute top-4 left-0 text-xs text-secondary transition-all duration-300 opacity-0">Pemeriksaan · SRV-009803</p>
+              <p id="sub-scrolled" class="absolute top-4 left-0 text-xs text-secondary transition-all duration-300 opacity-0">Pemeriksaan Awal · SRV-009803 · Budi</p>
             </div>
           </div>
         </div>
@@ -234,7 +234,7 @@
           </div>
         </section>
 
-        <section class="sticky top-20 z-30">
+        <section class="z-30">
           <div class="nav-container p-1 rounded-full flex relative">
             <div id="active-pill" class="nav-active-bg absolute top-1 bottom-1 left-1 w-[calc(33.33%-4px)] rounded-full z-0" style="transform: translateX(100%);"></div>
             
@@ -378,21 +378,21 @@
     scrollArea.addEventListener('scroll', () => {
       requestAnimationFrame(() => {
         let y = scrollArea.scrollTop;
-        let progress = Math.min(Math.max(y / 60, 0), 1);
+        let progress = Math.min(Math.max(y / 100, 0), 1);
         let easeProgress = 1 - Math.pow(1 - progress, 3);
 
         document.body.style.setProperty('--scroll-progress', easeProgress);
         headerBg.style.opacity = easeProgress;
-        headerBg.style.backgroundColor = `rgba(var(--bg-base-rgb, 255,255,255), ${easeProgress * 0.8})`;
+        headerBg.style.backgroundColor = `rgba(var(--bg-base-rgb, 255,255,255), ${easeProgress * 0.9})`;
 
-        logoBlock.style.transform = `scale(${1 - (easeProgress * 0.3)})`;
-        logoBlock.style.opacity = 1 - (easeProgress * 0.4);
+        logoBlock.style.transform = `scale(${1 - (easeProgress * 0.15)})`;
+        logoBlock.style.opacity = 1 - (easeProgress * 0.2);
 
-        subDefault.style.transform = `translateY(${-easeProgress * 20}px)`;
-        subDefault.style.opacity = 1 - (easeProgress * 2);
+        subDefault.style.transform = `translateY(${-easeProgress * 16}px)`;
+        subDefault.style.opacity = 1 - (easeProgress * 1.5);
         
-        subScrolled.style.transform = `translateY(${16 - (easeProgress * 16)}px)`;
-        subScrolled.style.opacity = easeProgress * 1.5;
+        subScrolled.style.transform = `translateY(${14 - (easeProgress * 14)}px)`;
+        subScrolled.style.opacity = Math.min(easeProgress * 2, 1);
       });
     });
 
